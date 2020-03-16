@@ -1,0 +1,6 @@
+install.packages("devtools")
+devtools::install_github("daniel1noble/metaDigitise")
+library(metaDigitise)
+data <- metaDigitise(dir = "~/Diving meta-analysis/data_extraction/figures")
+print(data)
+write.csv(data, "lab_dive_durations.csv")
