@@ -39,15 +39,15 @@ rm(list=ls())
 	geom_point()
 
 # Add in observation level random effects
-	data$err <- 1:dim(data)[1]
+	data$obs <- 1:dim(data)[1]
 
 # Scale by species / within species
 	sp <- split(data, data$species_genus_sp)
-	data$centr <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
+	data$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
 
 # Now lets try a simple model
-model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|err), data = data)
-model2 <- rma.mv(log(mean) ~ scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|err), data = data)
+model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
+model2 <- rma.mv(log(mean) ~ scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
 
 # Bayesian
 data2 <- data[complete.cases(data[,c("acclimation_temp", "body_mass_g")]),]
@@ -83,9 +83,11 @@ summary(model4)
 ########## Phylogeny
 ### Access taxon relationships from Open Tree of Life
 # Match species in dataset
-data$species_rotl <- paste0(data$genus, "_", data$species_new)
-tree <- tnrs_match_names(names = unique(data$species_rotl), context_name = "Animals")
-write.csv(unique(data$species_rotl), file = "species.csv")
+ data$species_rotl <- paste0(data$genus, "_", data$species_new)
+data2$species_rotl <- paste0(data2$genus, "_", data2$species_new)
+
+tree <- tnrs_match_names(names = unique(data2$species_rotl), context_name = "Animals")
+write.csv(unique(data2$species_rotl), file = "species.csv")
 #Create a tree based on itt id's found on the open tree of life
 tl <- tol_induced_subtree(ott_ids=na.omit(tree$ott_id)) 
 plot(tl)
@@ -98,4 +100,18 @@ is.ultrametric(phylo_branch)
 plot(phylo_branch)
 
 #phylo variance-covariance matrix
-A <- vcv(phylo_branch, cor=T)
+A <- inverseA(phylo_branch, nodes = "TIPS")$Ainv
+
+data2$species_rotl <- ifelse(data2$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data2$species_rotl)
+data2$species_rotl <- ifelse(data2$species_rotl == "Ilybius_erichsonii", "Ilybius_erichsoni", data2$species_rotl)
+data2$species_rotl <- ifelse(data2$species_rotl == "Ilybius_pederzani", "Ilybius_pederzanii", data2$species_rotl)
+
+sort(unique(data2$species_rotl)) == sort(rownames(A))
+
+ sort(rownames(A))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
+ sort(unique(data2$species_rotl))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
+
+data2 <- data2[,-21]
+
+model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model5)
