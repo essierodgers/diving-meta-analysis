@@ -41,9 +41,11 @@ rm(list=ls())
 # Add in observation level random effects
 	data$obs <- 1:dim(data)[1]
 
-# Scale by species / within species
-	sp <- split(data, data$species_genus_sp)
-	data$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
+# Tcentering 
+#Tw-centering of tempreature within each species across all studies on that species
+	sp <- split(data, data$species)
+	data$T_cen <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
+#Tb- between study effects = mean temperature for each study.
 
 # Now lets try a simple model
 model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
