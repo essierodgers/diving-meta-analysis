@@ -44,9 +44,17 @@ rm(list=ls())
 # Tcentering 
 #Tw-centering of tempreature within each species across all studies on that species
 	sp <- split(data, data$species)
-	data$T_cen <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
-#Tb- between study effects = mean temperature for each study.
+	data$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
 
+
+#Models with Tcentering	
+model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T_w + I(T_w^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)	
+model2 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T_w, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)	
+
+
+model3 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T_w, mev = data2$mean_sv, random = ~us(1):study_ID + us(1):species, data = data2, prior = prior_int, nitt = 50000, burnin = 10000, thin = 30)
+summary(model3)
+plot(model3)
 # Now lets try a simple model
 model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
 model2 <- rma.mv(log(mean) ~ scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
@@ -113,7 +121,7 @@ sort(unique(data2$species_rotl)) == sort(rownames(A))
  sort(rownames(A))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
  sort(unique(data2$species_rotl))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
 
-data2 <- data2[,-21]
+data <- data[,-21]
 
 model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
 summary(model5)
