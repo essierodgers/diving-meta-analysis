@@ -4,11 +4,13 @@ pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 ## Read some data
 data <- read.csv("./data/lab_dive_durations_armbased.csv")
 data <- read.csv("~/diving-meta-analysis/data/order_data/serpentes.csv")
+data <- read.csv("~/diving-meta-analysis/data/order_data/crocodilia.csv")
 
 #importing phylogeny from timetree
 tree <- read.tree("~/diving-meta-analysis/data/order_data/serpentes_phylogeny.NWK")
 plot(tree)
-mat <- MCMCglmm::inverseA(tree, nodes="TIPS")$Ainv
+#creating phylo variance covariance matrix
+A <- MCMCglmm::inverseA(tree, nodes="TIPS")$Ainv
 
 # Separating genus and species
 genus <- as.data.frame(do.call("rbind", str_split(str_trim(data$species, side = "both"), " ")))
@@ -61,51 +63,24 @@ prior_int <- list(R = list(V = 1, nu = 0.001),
                   G = list(G1 = list(V=1, nu = 0.02),
                            G2 = list(V = 1, nu = 0.02)))
 
-
-
-
-
-
-
-########## Phylogeny
-### Access taxon relationships from Open Tree of Life
 # Match species in dataset
-data$species_rotl <- paste0(data$genus, "_", data$species_new)
 data2$species_rotl <- paste0(data2$genus, "_", data2$species_new)
-
-tree <- tnrs_match_names(names = unique(data2$species_rotl), context_name = "Animals")
-write.csv(unique(data2$species_rotl), file = "serpentes_species.csv")
-
-
-#Create a tree based on itt id's found on the open tree of life
-tl <- tol_induced_subtree(ott_ids=na.omit(tree$ott_id)) 
-plot(tl)
-
-#branch lengths with phytools
-phylo_branch <-compute.brlen(tl, method = "Grafen", power= 0.5)
-
-phylo_branch$tip.label <- gsub("_ott.*", "", phylo_branch$tip.label)
-is.ultrametric(phylo_branch)
-plot(phylo_branch)
-
-#phylo variance-covariance matrix
-mat <- MCMCglmm::inverseA(tree, "TIPS")$invA
-
-
-
-
-data2$species_rotl <- ifelse(data2$species_rotl == "Natrix_maura", "Coluber_maurus", data2$species_rotl)
-
-
 
 #Models with Tcentering- simple model
 model1 <- rma.mv(log(mean) ~  scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
 model2 <- rma.mv(log(mean) ~  scale(acclimation_temp) + scale(log(body_mass_g)) + T_w, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
 
+#MCMCglmm models
+model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model5)
+model6 <- MCMCglmm(log(mean) ~ scale(log(body_mass_g)) + T_w, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model6)
+
+model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1):species, data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model5)
 
 
 
 
-
-
-myTree <-ape::read.tree(text='(((Hydrophis_curtus:7.38740000,Hydrophis_elegans:7.38740000):44.00570600, (Natrix_maura:51.39310600):24.20689400, (Acrochordus_arafurae:75.60000000);')
+model4 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1):species, data = data2, prior = prior_int, nitt = 50000, burnin = 10000, thin = 30)
+summary(model4)
