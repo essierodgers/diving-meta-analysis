@@ -67,12 +67,19 @@ model3 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g))
 summary(model3)
 plot(model3)
 
+
+
+
+
 model4 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
 summary(model4)
 
 model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
 summary(model5)
 saveRDS(model5, "model5.rds")
+
+model6 <- MCMCglmm(log(mean) ~ scale(log(body_mass_g)) + T, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model5)
 
 #simple model-verts only                 
 model1 <- rma.mv(log(mean) ~  scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data_verts)                
