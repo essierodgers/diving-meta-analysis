@@ -4,19 +4,20 @@ pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 # Remove stuff
 rm(list=ls())
 
-#separate verts from inverts
-data_verts <- data2 %>% filter(study_ID != 13)
+
 
 ## Read some data
 	data <- read.csv("./data/lab_dive_durations_armbased.csv")
 	data <- read.csv("~/diving-meta-analysis/data/lab_dive_durations_armbased.csv")
 
+#separate verts from inverts
+	data_verts <- data %>% filter(study_ID != 13)
 
 # Separating genus and species
-	genus <- as.data.frame(do.call("rbind", str_split(str_trim(data$species, side = "both"), " ")))
+	genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
 	names(genus) <- c("genus", "species_new")
-	data <- cbind(data, genus)	
-	data <- data[,-22]
+	data_verts <- cbind(data_verts, genus)	
+	data_verts <- data_verts[,-22]
 	
 	# Sampling variance for mean
 	m_sv <- function(mean, sd, n){
@@ -31,18 +32,18 @@ data_verts <- data2 %>% filter(study_ID != 13)
 
 # Now we can calculate the sampling variance for all mean estimates
 
-	data$mean_sv <- with(data, m_sv(mean, sd, n))
-	  data$sd_sv <- with(data, sd_sv(n))
+	data_verts$mean_sv <- with(data_verts, m_sv(mean, sd, n))
+	  data_verts$sd_sv <- with(data_verts, sd_sv(n))
 
 # Exploratory analysis 
-	with(data, plot(log(mean) ~ log(sd)))
-	with(data, hist(log(mean)))
-	with(data, hist(log(sd)))
-	ggplot(data, aes(y = log(mean), x=T, colour= species))+
+	with(data_verts, plot(log(mean) ~ log(sd)))
+	with(data_verts, hist(log(mean)))
+	with(data_verts, hist(log(sd)))
+	ggplot(data_verts, aes(y = log(mean), x=T, colour= species))+
 	geom_point()
 
 # Add in observation level random effects
-	data$obs <- 1:dim(data)[1]
+	data_verts$obs <- 1:dim(data_verts)[1]
 
 # Tcentering 
 #Tw-centering of tempreature within each species across all studies on that species
@@ -128,7 +129,7 @@ model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T + 
 model2 <- rma.mv(log(mean) ~ scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
 
 # Bayesian
-data2 <- data[complete.cases(data[,c("acclimation_temp", "body_mass_g")]),]
+data2 <- data_verts[complete.cases(data_verts[,c("acclimation_temp", "body_mass_g")]),]
 prior_slope <- list(R = list(V = 1, nu = 0.001),
 			G = list(G1 = list(V=1, nu = 0.02),
 					 G2 = list(V = diag(2), nu = 2)))
@@ -177,6 +178,9 @@ phylo_branch$tip.label <- gsub("_ott.*", "", phylo_branch$tip.label)
 is.ultrametric(phylo_branch)
 plot(phylo_branch)
 
+
+
+
 #phylo variance-covariance matrix
 A <- inverseA(phylo_branch, nodes = "TIPS")$Ainv
 
@@ -190,6 +194,24 @@ sort(unique(data2$species_rotl)) == sort(rownames(A))
  sort(unique(data2$species_rotl))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
 
 
+ 
+ #importing phylogeny from timetree
+ tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
+ plot(tree)
+ PhyloA <- vcv(tree, corr = TRUE)
+ A <- inverseA(PhyloA, nodes = "TIPS")$Ainv
+ 
+ 
+ 
+ # Separating genus and species
+ genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
+ names(genus) <- c("genus", "species_new")
+ data_verts <- cbind(data_verts, genus)
+ 
+ data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
 
-model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = PhyloA), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
 summary(model5)
+
+model7 <- MCMCglmm(log(sd) ~ log(mean) + log(body_mass_g) + T, mev = arms_data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = arms_data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model7)
