@@ -1,14 +1,10 @@
 # Packages
 pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 
-# Remove stuff
-rm(list=ls())
-
-
 
 ## Read some data
 	data <- read.csv("./data/lab_dive_durations_armbased.csv")
-	data <- read.csv("~/diving-meta-analysis/data/lab_dive_durations_armbased.csv")
+
 
 #separate verts from inverts
 	data_verts <- data %>% filter(study_ID != 13)
@@ -33,7 +29,7 @@ rm(list=ls())
 # Now we can calculate the sampling variance for all mean estimates
 
 	data_verts$mean_sv <- with(data_verts, m_sv(mean, sd, n))
-	  data_verts$sd_sv <- with(data_verts, sd_sv(n))
+	data_verts$sd_sv <- with(data_verts, sd_sv(n))
 
 # Exploratory analysis 
 	with(data_verts, plot(log(mean) ~ log(sd)))
@@ -45,14 +41,95 @@ rm(list=ls())
 # Add in observation level random effects
 	data_verts$obs <- 1:dim(data_verts)[1]
 
+ #importing phylogeny from timetree
+ tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
+ plot(tree)
+ A <- inverseA(tree, nodes = "TIPS")$Ainv
+ 
+#Tree checks function
+  tree_checks <- function(data, tree, dataCol, type = c("checks", "prune")){
+   type = match.arg(type)
+   # How many unique species exist in data and tree
+   Numbers <- matrix(nrow = 2, ncol = 1)
+   Numbers[1,1] <- length(unique(data$spp_name_phylo)) 
+   Numbers[2,1] <- length(tree$tip.label) 
+   rownames(Numbers)<- c("Species in data:", "Species in tree:")
+   # Missing species or species not spelt correct      
+   species_list1= setdiff(sort(tree$tip.label), sort(unique(data[,dataCol])))
+   species_list2= setdiff(sort(unique(data[,dataCol])), sort(tree$tip.label) )
+   if(type == "checks"){
+     return(list(SpeciesNumbers = data.frame(Numbers), 
+                 Species_InTree_But_NotData=species_list1, 
+                 Species_InData_But_NotTree=species_list2))
+   }
+   if(type == "prune"){
+     if(length(species_list2) >=1) stop("Sorry, you can only prune a tree when you have no taxa existing in the data that are not in the tree")
+     return(ape::drop.tip(tree, species_list1))
+   }
+ }
+ 
+# Bayesian Priors              
+  data2 <- data_verts[complete.cases(data_verts[,c("acclimation_temp", "body_mass_g")]),]
+  prior_slope <- list(R = list(V = 1, nu = 0.001),
+                      G = list(G1 = list(V=1, nu = 0.02),
+                               G2 = list(V = diag(2), nu = 2)))
+  
+  prior_int <- list(R = list(V = 1, nu = 0.001),
+                    G = list(G1 = list(V=1, nu = 0.02),
+                             G2 = list(V = 1, nu = 0.02)))
+
+  
+  
+#Adding species list
+data_verts$species_list <- paste0(data_verts$genus, "_", data_verts$species_new)
+data2$species_list <- paste0(data2$genus, "_", data2$species_new)
+  
+
+# Check same number of levels
+length(rownames(A))
+length(unique(data_verts$species_list))
+length(unique(data2$species_list))
+
+# Check what is different-- different number of species (16 compared to 13)
+setdiff(unique(data2$species_list), sort(rownames(A)))
+
+# Fix what is different species name
+data2$species_list <- ifelse(data2$species_list == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data2$species_list)
+
+#check tree
+tree_checks(data2, tree, dataCol = "species_list", type ="checks")
+
+
+#Mean model 
+model1 <- MCMCglmm(log(mean) ~  log(body_mass_g) + T, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_list, ginverse = list(species_list = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model1)
+plot(model1)
+  
+
+#SD model
+model2 <- MCMCglmm(log(sd) ~ log(mean) + log(body_mass_g) + T, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_list, ginverse = list(species_list = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model2)
+plot(model2)
+  
+  
+  
+  
+
+  
+
+
+
+
+#OLD CODE- IGNORE FOR NOW
+
 # Tcentering 
 #Tw-centering of tempreature within each species across all studies on that species
-	sp <- split(data, data$species)
-	data$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
+sp <- split(data_verts, data_verts$species)
+data_verts$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
 
 
 #Models with Tcentering- simple model
-model1 <- rma.mv(log(mean) ~  scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
+model1 <- rma.mv(log(mean) ~  scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data_verts)
 
 # Bayesian with Tcentering                
 data2 <- data[complete.cases(data[,c("acclimation_temp", "body_mass_g")]),]
@@ -86,7 +163,7 @@ summary(model5)
 model1 <- rma.mv(log(mean) ~  scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data_verts)                
 
 #Phlogeny- verts only
-data_verts$species_rotl <- paste0(data$genus, "_", data$species_new)
+data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
 tree <- tnrs_match_names(names = unique(data_verts$species_rotl), context_name = "Animals")
 write.csv(unique(data_verts$species_rotl), file = "species.csv")
 #Create a tree based on itt id's found on the open tree of life
@@ -103,7 +180,7 @@ data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbigny
 
 # Bayesian with Tcentering -verts only
 
-data2 <- data[complete.cases(data[,c("acclimation_temp", "body_mass_g")]),]
+data2 <- data_verts[complete.cases(data_verts[,c("acclimation_temp", "body_mass_g")]),]
 prior_slope <- list(R = list(V = 1, nu = 0.001),
                     G = list(G1 = list(V=1, nu = 0.02),
                              G2 = list(V = diag(2), nu = 2)))
@@ -123,6 +200,16 @@ summary(model4)
 
 
 
+model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model5)
+
+model7 <- MCMCglmm(log(sd) ~ log(mean) + log(body_mass_g) + T, mev = arms_data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = arms_data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+summary(model7)
+
+
+
+
+
 #WIHTOUT Tcentering
 # Now lets try a simple model
 model1 <- rma.mv(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T + I(T^2), V = mean_sv, random = list(~1 |study_ID, ~1|species, ~1|obs), data = data)
@@ -131,12 +218,12 @@ model2 <- rma.mv(log(mean) ~ scale(body_mass_g) + T + I(T^2), V = mean_sv, rando
 # Bayesian
 data2 <- data_verts[complete.cases(data_verts[,c("acclimation_temp", "body_mass_g")]),]
 prior_slope <- list(R = list(V = 1, nu = 0.001),
-			G = list(G1 = list(V=1, nu = 0.02),
-					 G2 = list(V = diag(2), nu = 2)))
+                    G = list(G1 = list(V=1, nu = 0.02),
+                             G2 = list(V = diag(2), nu = 2)))
 
 prior_int <- list(R = list(V = 1, nu = 0.001),
-			G = list(G1 = list(V=1, nu = 0.02),
-					 G2 = list(V = 1, nu = 0.02)))
+                  G = list(G1 = list(V=1, nu = 0.02),
+                           G2 = list(V = 1, nu = 0.02)))
 
 
 
@@ -190,28 +277,5 @@ data2$species_rotl <- ifelse(data2$species_rotl == "Ilybius_pederzani", "Ilybius
 
 sort(unique(data2$species_rotl)) == sort(rownames(A))
 
- sort(rownames(A))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
- sort(unique(data2$species_rotl))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
-
-
- 
- #importing phylogeny from timetree
- tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
- plot(tree)
- PhyloA <- vcv(tree, corr = TRUE)
- A <- inverseA(PhyloA, nodes = "TIPS")$Ainv
- 
- 
- 
- # Separating genus and species
- genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
- names(genus) <- c("genus", "species_new")
- data_verts <- cbind(data_verts, genus)
- 
- data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
-
-model5 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(log(body_mass_g)) + T_w + T_b, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = PhyloA), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
-summary(model5)
-
-model7 <- MCMCglmm(log(sd) ~ log(mean) + log(body_mass_g) + T, mev = arms_data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = arms_data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
-summary(model7)
+sort(rownames(A))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]
+sort(unique(data2$species_rotl))[-which(sort(unique(data2$species_rotl)) == sort(rownames(A)))]

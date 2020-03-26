@@ -4,7 +4,7 @@ library(devtools)
 install_github("daniel1noble/metaAidR"); library(metaAidR)
 
 # Read in the data
-data <- read.csv("./data/lab_dive_durations_contrast_highlow.csv")
+data <- read.csv("./data/lab_dive_durations_contrast.csv")
 str(data)
 data$body_mass_g <- as.numeric(data$body_mass_g)
 
@@ -26,7 +26,7 @@ PhyloA <- vcv(tree, corr = TRUE)
 genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
 names(genus) <- c("genus", "species_new")
 data_verts <- cbind(data_verts, genus)
-
+data_verts <- data_verts[,-28]
 data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
 
 # Check same number of levels
@@ -61,19 +61,19 @@ data_verts_CVR <- escalc(m1i = mean_control, m2i = mean_treatment, n1i = n_contr
 (log(data$mean_control) - log(data$mean_treatment) ) == (log(data$mean_control/data$mean_treatment))
 
 #error calc-residual variance at the observation level
+data_verts_CVR$obs <- 1:dim(data_verts_CVR)[1]
 data_verts_ROM$obs <- 1:dim(data_verts_ROM)[1]
-
 # Meta-analytic multivariate model - wihtout intercept
 model1 <- rma.mv(yi ~ -1 + scale(delta_t) + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|error), data = data_verts)
 summary(model1)
 
 # Fit model with phylogeny-ROM
-model2_phylo <- rma.mv(yi ~ scale(delta_t) + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+model1_phylo <- rma.mv(yi ~ delta_t + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
 
 
 
 # Fit model with phylogeny- CVR
-model1_CVR <- rma.mv(yi ~ scale(delta_t) + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+model1_CVR <- rma.mv(yi ~ delta_t + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
 
 
 

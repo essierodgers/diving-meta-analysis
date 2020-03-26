@@ -1,90 +1,80 @@
-study_ID,study_name,genus,species,species_genus_sp,life_stage,animal_source,body_mass_g,respiration_mode,replication_level,dive_type,mean_or_max,acclimation_temp,t1,t2,delta_t,mean_control,sd_control,n_control,se_control,mean_treatment,sd_treatment,n_treatment,se_treatment,shared_control,Q10,source,
-11,011_Bruton_etal_2012,Acrochordus,arafurae,Acrochordus arafurae,juvenile,captive,85,bimodal,individual,voluntary,mean,24,24,32,8,50.17857143,8.081220356,8,2.857142857,26.96428571,5.555838995,8,1.964285714,1,0.460085222,fig1b,
-11,011_Bruton_etal_2012,Acrochordus,arafurae,Acrochordus arafurae,juvenile,captive,85,bimodal,individual,voluntary,mean,32,24,32,8,56.60714286,10.17857143,9,3.392857143,32.32142857,6.964285714,9,2.321428571,2,0.496334131,fig1b,
-92,092_Pratt&Franklin_2010,Acrochordus,arafurae,Acrochordus arafurae,juvenile,captive,57,bimodal,individual,voluntary,mean,28,20,26,6,53.84615385,7.653749516,11,2.307692308,43.07692308,8.291561976,11,2.5,1,0.689419101,Fig2,
-92,092_Pratt&Franklin_2010,Acrochordus,arafurae,Acrochordus arafurae,juvenile,captive,57,bimodal,individual,voluntary,mean,28,20,32,12,53.84615385,7.653749516,11,2.307692308,19.61538462,7.015937057,11,2.115384615,1,0.431057412,Fig2,
-92,092_Pratt&Franklin_2010,Acrochordus,arafurae,Acrochordus arafurae,juvenile,captive,57,bimodal,individual,voluntary,mean,28,26,32,6,43.07692308,8.291561976,11,2.5,19.61538462,7.015937057,11,2.115384615,2,0.269517471,Fig2,
-120,120_Uriona_etal_2009,Alligator,mississippiensis,Alligator mississippiensis,juvenile,captive,242,aerial,individual,voluntary,mean,25,22,28,6,5.227272727,0.561219975,7,0.212121212,2.651515152,0.280609988,7,0.106060606,1,0.322625177,Fig3A,
-90,090_Prassack_etal_2001,Apalone,ferox,Apalone ferox,unspecified,wild,1123.3,bimodal,individual,voluntary,mean,25/15,15,25,10,18.6,11.7,9,3.9,5.4,3,9,1,2,0.290322581,Table2,
-90,090_Prassack_etal_2001,Chrysemys,picta,Chrysemys picta,unspecified,wild,295.4,bimodal,individual,voluntary,mean,25/15,15,25,10,5.7,2.984962311,11,0.9,3.9,2.653299832,11,0.8,1,0.684210526,Table2,
-128,128_Santos_etal_1990,Chrysemys,dorbignyi,Chrysemys dorbignyi,adult,wild,1755,bimodal,individual,voluntary,mean,"18,25.4",18,25.4,7.4,9.4,6.7,6,NA,4.1,5.2,10,NA,1,0.325873206,Table1,
-99,099_Rodgers&Franlin_2017,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,488,aerial,individual,fright,mean,"28,34",28,34,6,18.5,8.313843876,12,2.4,9,3.741657387,14,1,1,0.300920172,In text pg.3559,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,28,28,31.5,3.5,6.666666667,4.614434491,11,1.391304348,4,0.672938363,11,0.202898551,1,0.232352008,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,28,28,35,7,6.666666667,4.614434491,11,1.391304348,2.463768116,0.672938363,11,0.202898551,1,0.241221405,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,28,31.5,35,3.5,4,0.672938363,11,0.202898551,2.463768116,0.672938363,11,0.202898551,2,0.250429367,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,31.5,28,31.5,3.5,8.202898551,1.826546986,11,0.550724638,4.637681159,3.653093972,11,1.101449275,3,0.196056644,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,31.5,28,35,7,8.202898551,1.826546986,11,0.550724638,2.173913043,0.672938363,11,0.202898551,3,0.150005401,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,31.5,31.5,35,3.5,4.637681159,3.653093972,11,1.101449275,2.173913043,0.672938363,11,0.202898551,4,0.114771017,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,35,28,31.5,3.5,7.768115942,4.710568543,11,1.420289855,4.608695652,2.787887505,11,0.84057971,5,0.224997704,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,35,28,35,7,7.768115942,4.710568543,11,1.420289855,3.391304348,1.53814483,11,0.463768116,5,0.306046375,Fig2B,
-101,101_Rodgers_etal_2015,Crocodylus,porosus,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,35,31.5,35,3.5,4.608695652,2.787887505,11,0.84057971,3.391304348,1.53814483,11,0.463768116,6,0.416290397,Fig2B,
-13,013_Calosi_etal_2012,Deronectes,algibensis,Deronectes algibensis,adult,wild,0.006345,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.524833333,1.988666667,17,NA,0.546166667,0.2745,17,NA,1,0.154624334,TableS3,
-13,013_Calosi_etal_2012,Deronectes,angusi,Deronectes angusi,adult,wild,0.008165,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,2.563166667,4.451833333,15,NA,3.768833333,4.523333333,12,NA,2,2.015664921,TableS3,
-13,013_Calosi_etal_2012,Deronectes,aubei,Deronectes aubei,adult,wild,0.006155,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.0725,0.737333333,13,NA,0.763166667,0.471833333,13,NA,3,0.538657728,TableS3,
-13,013_Calosi_etal_2012,Deronectes,bicostatus,Deronectes bicostatus,adult,wild,0.00546,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.776166667,3.043,15,NA,1.268,0.916,16,NA,4,0.54185464,TableS3,
-13,013_Calosi_etal_2012,Deronectes,brannanii,Deronectes brannanii,adult,wild,0.00918,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.001833333,0.684,15,NA,1.939,1.871333333,12,NA,5,3.322174351,TableS3,
-13,013_Calosi_etal_2012,Deronectes,depressicollis,Deronectes depressicollis,adult,wild,0.008925,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,3.342833333,3.184,16,NA,1.057833333,0.762333333,11,NA,6,0.123440916,TableS3,
-13,013_Calosi_etal_2012,Deronectes,fairmairei,Deronectes fairmairei,adult,wild,0.005885,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,2.837333333,1.9435,12,NA,1.0435,0.756333333,18,NA,7,0.162236758,TableS3,
-13,013_Calosi_etal_2012,Deronectes,hispanicus,Deronectes hispanicus,adult,wild,0.00683,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.458666667,1.860166667,16,NA,1.487666667,2.121,17,NA,8,1.036441225,TableS3,
-13,013_Calosi_etal_2012,Deronectes,lareynii,Deronectes lareynii,adult,wild,0.00682,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,5.152166667,8.118,18,NA,2.023833333,3.026833333,12,NA,9,0.182874965,TableS3,
-13,013_Calosi_etal_2012,Deronectes,latus,Deronectes latus,adult,wild,0.00855,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.613,1.316,15,NA,5.946,13.58383333,16,NA,10,10.71925527,TableS3,
-13,013_Calosi_etal_2012,Deronectes,mazzoldi,Deronectes mazzoldi,adult,wild,0.009965,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.264833333,0.765833333,13,NA,4.262166667,6.512,13,NA,11,9.104739017,TableS3,
-13,013_Calosi_etal_2012,Deronectes,moestus,Deronectes moestus,adult,wild,0.00631,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,7.0075,10.15416667,17,NA,3.620333333,4.351,18,NA,12,0.300967087,TableS3,
-13,013_Calosi_etal_2012,Deronectes,opatrinus,Deronectes opatrinus,adult,wild,0.010575,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,4.1435,4.819,11,NA,1.549166667,1.318333333,14,NA,13,0.167165599,TableS3,
-13,013_Calosi_etal_2012,Deronectes,platynotus,Deronectes platynotus,adult,wild,0.009845,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,0.965833333,0.814,14,NA,1.206,1.241666667,18,NA,14,1.497458377,TableS3,
-13,013_Calosi_etal_2012,Deronectes,semirufus,Deronectes semirufus,adult,wild,0.009075,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.8865,1.800166667,17,NA,4.381,5.710333333,16,NA,15,4.627033297,TableS3,
-13,013_Calosi_etal_2012,Deronectes,wewalkai,Deronectes wewalkai,adult,wild,0.007565,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,2.655166667,2.615833333,18,NA,1.381166667,1.289833333,16,NA,16,0.304731193,TableS3,
-107,107_Schaffer_etal_2016,Elseya,irwini,Elseya irwini,adult,wild,3813,bimodal,individual,voluntary,mean,"17,25",17,25,8,97.4,30.3,9,10.1,25.1,4.8,9,1.6,1,0.183608785,Table1,
-116,116_Storey_etal_2008,Elseya,albagula,Elseya albagula,juveniles,wild,133.3,bimodal,individual,voluntary,mean,unreported,20,25,5,27.6,32.45454942,7,12.26666667,15.33333333,5.644269464,7,2.133333333,1,0.308641975,Fig2A,
-116,116_Storey_etal_2008,Elseya,albagula,Elseya albagula,juveniles,wild,133.3,bimodal,individual,voluntary,mean,unreported,20,30,10,27.6,32.45454942,7,12.26666667,9.333333333,4.938735781,7,1.866666667,1,0.338164251,Fig2A,
-116,116_Storey_etal_2008,Elseya,albagula,Elseya albagula,juveniles,wild,133.3,bimodal,individual,voluntary,mean,unreported,25,30,5,15.33333333,5.644269464,7,2.133333333,9.333333333,4.938735781,7,1.866666667,2,0.370510397,Fig2A,
-23,023_Clark_etal_2008,Elusor,macrurus,Elusor macrurus,juvenile,wild,29.88,bimodal,individual,voluntary,mean,17,17,28,11,765,521.7413152,6,213,8.36,1.420704051,6,0.58,1,0.016476272,In text pg. 304,
-23,023_Clark_etal_2008,Elusor,macrurus,Elusor macrurus,juvenile,wild,30.04,bimodal,individual,voluntary,mean,28,17,28,11,125,55.56077753,7,21,6.78,2.539921259,7,0.96,2,0.070693833,In text pg. 304,
-93,093_Priest&Franklin_2002,Emydura,macquarii,Emydura macquarii,adult,wild,1595,bimodal,individual,voluntary,mean,23,15,23,8,32.55813953,16.64050588,5,7.441860465,4.88372093,2.600079044,5,1.162790698,1,0.093349947,Fig1B,
-93,093_Priest&Franklin_2002,Emydura,macquarii,Emydura macquarii,adult,wild,1595,bimodal,individual,voluntary,mean,23,15,30,15,32.55813953,16.64050588,5,7.441860465,6.511627907,3.640110661,5,1.627906977,1,0.341995189,Fig1B,
-93,093_Priest&Franklin_2002,Emydura,macquarii,Emydura macquarii,adult,wild,1595,bimodal,individual,voluntary,mean,23,23,30,7,4.88372093,2.600079044,5,1.162790698,6.511627907,3.640110661,5,1.627906977,2,1.508286728,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,curtus,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,21,24,3,39.78947368,16.05944635,11,4.842105263,28.42105263,15.36120956,11,4.631578947,1,0.325766594,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,curtus,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,21,27,6,39.78947368,16.05944635,11,4.842105263,15.78947368,4.887657586,11,1.473684211,1,0.214288615,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,curtus,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,21,30,9,39.78947368,16.05944635,11,4.842105263,11.15789474,3.49118399,11,1.052631579,1,0.243478195,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,curtus,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,24,27,3,28.42105263,15.36120956,11,4.631578947,15.78947368,4.887657586,11,1.473684211,2,0.140958623,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,curtus,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,24,30,6,28.42105263,15.36120956,11,4.631578947,11.15789474,3.49118399,11,1.052631579,2,0.210492601,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,curtus,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,27,30,3,15.78947368,4.887657586,11,1.473684211,11.15789474,3.49118399,11,1.052631579,3,0.314327241,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,elegans,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,21,24,3,27.36842105,13.31485331,10,4.210526316,21.68421053,9.986139979,10,3.157894737,1,0.460234928,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,elegans,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,21,27,6,27.36842105,13.31485331,10,4.210526316,14.10526316,4.660198657,10,1.473684211,1,0.331298206,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,elegans,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,21,30,9,27.36842105,13.31485331,10,4.210526316,10.94736842,1.997227996,10,0.631578947,1,0.361280428,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,elegans,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,24,27,3,21.68421053,9.986139979,10,3.157894737,14.10526316,4.660198657,10,1.473684211,2,0.238483641,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,elegans,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,24,30,6,21.68421053,9.986139979,10,3.157894737,10.94736842,1.997227996,10,0.631578947,2,0.320093507,Fig1B,
-119,119_Udyawer_etal_2016,Hydrophis,elegans,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,27,30,3,14.10526316,4.660198657,10,1.473684211,10.94736842,1.997227996,10,0.631578947,3,0.429630531,Fig1B,
-13,013_Calosi_etal_2012,Ilybius,chalconatus,Ilybius chalconatus,adult,wild,0.053485,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,95.86,88.14,13,NA,182.42,212.5,15,NA,17,3.221541164,TableS4,
-13,013_Calosi_etal_2012,Ilybius,erichsonii,Ilybius erichsonii,adult,wild,0.02945,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,222.06,242.38,11,NA,248.94,120.03,11,NA,18,1.230909406,TableS4,
-13,013_Calosi_etal_2012,Ilybius,hozgargantae,Ilybius hozgargantae,adult,wild,0.04733,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,274.97,216.16,18,NA,158.67,110.69,14,NA,19,0.367989536,TableS4,
-13,013_Calosi_etal_2012,Ilybius,meridionalis,Ilybius meridionalis,adult,wild,0.08525,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,128,184.41,13,NA,72.23,57.62,15,NA,20,0.353342371,TableS4,
-13,013_Calosi_etal_2012,Ilybius,montanus,Ilybius montanus,adult,wild,0.073475,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,361.68,209.78,15,NA,197.13,106.89,13,NA,21,0.3317253,TableS4,
-13,013_Calosi_etal_2012,Ilybius,neglectus,Ilybius neglectus,adult,wild,0.04459,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,535.17,415.08,8,NA,384.87,360.34,10,NA,22,0.549132197,TableS4,
-13,013_Calosi_etal_2012,Ilybius,pederzani,Ilybius pederzani,adult,wild,0.061135,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,254.21,223.13,14,NA,117.61,90.28,17,NA,23,0.246244524,TableS4,
-13,013_Calosi_etal_2012,Ilybius,subtilis,Ilybius subtilis,adult,wild,0.10132,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,152.33,16.97,2,NA,102.39,118.24,2,NA,24,0.485638278,TableS4,
-3,003_Aubret_etal_2015,Natrix,maura,Natrix maura ,juvenile,wild,unreported,aerial,individual,fright,mean,18,10,20,10,57.27272727,34.54246399,231,2.272727273,11.13636364,13.81698559,231,0.909090909,1,0.194444444,fig1,
-3,003_Aubret_etal_2015,Natrix,maura,Natrix maura ,juvenile,wild,unreported,aerial,individual,fright,mean,18,10,30,20,57.27272727,34.54246399,231,2.272727273,3.636363636,10.3627392,231,0.681818182,1,0.251976315,fig1,
-3,003_Aubret_etal_2015,Natrix,maura,Natrix maura ,juvenile,wild,unreported,aerial,individual,fright,mean,18,20,30,10,11.13636364,13.81698559,231,0.909090909,3.636363636,10.3627392,231,0.681818182,2,0.326530612,fig1,
-93,093_Priest&Franklin_2002,Rheodytes,leukops,Rheodytes leukops,adult,wild,1325,bimodal,individual,voluntary,mean,23,15,23,8,98.94736842,55.43582049,6,22.63157895,35.78947368,19.33807692,6,7.894736842,1,0.280503852,Fig1A,
-93,093_Priest&Franklin_2002,Rheodytes,leukops,Rheodytes leukops,adult,wild,1325,bimodal,individual,voluntary,mean,23,15,30,15,98.94736842,55.43582049,6,22.63157895,15.26315789,11.60284615,6,4.736842105,1,0.287625089,Fig1A,
-93,093_Priest&Franklin_2002,Rheodytes,leukops,Rheodytes leukops,adult,wild,1325,bimodal,individual,voluntary,mean,23,23,30,7,35.78947368,19.33807692,6,7.894736842,15.26315789,11.60284615,6,4.736842105,2,0.295985286,Fig1A,
-97,097_Reyes&Milsom_2009,Trachemys,scripta,Trachemys scripta elegans,adult,captive,1110,aerial,individual,voluntary,mean,"9,14.7,20.8",9,14.7,5.7,55.8,1.414213562,8,0.5,51.3,3.959797975,8,1.4,1,0.862850151,Table2,
-97,097_Reyes&Milsom_2009,Trachemys,scripta,Trachemys scripta elegans,adult,captive,1110,aerial,individual,voluntary,mean,"9,14.7,20.8",9,20.8,11.8,55.8,1.414213562,8,0.5,54,1.959591794,6,0.8,1,0.972594549,Table2,
-97,097_Reyes&Milsom_2009,Trachemys,scripta,Trachemys scripta elegans,adult,captive,1110,aerial,individual,voluntary,mean,"9,14.7,20.8",14.7,20.8,6.1,51.3,3.959797975,8,1.4,54,1.959591794,6,0.8,2,1.087723922,Table2,
-106,106_Samajova&Gvozdik_2009,Triturus,alpestris,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,10,15,5,5.512820513,1.954108603,12,0.564102564,3.320512821,1.154700538,12,0.333333333,1,0.362796106,Fig2A,
-106,106_Samajova&Gvozdik_2009,Triturus,alpestris,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,10,20,10,5.512820513,1.954108603,12,0.564102564,2.102564103,0.53293871,12,0.153846154,1,0.381395349,Fig2A,
-106,106_Samajova&Gvozdik_2009,Triturus,alpestris,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,10,25,15,5.512820513,1.954108603,12,0.564102564,0.923076923,0.222057796,12,0.064102564,1,0.303791786,Fig2A,
-106,106_Samajova&Gvozdik_2009,Triturus,alpestris,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,15,20,5,3.320512821,1.154700538,12,0.333333333,2.102564103,0.53293871,12,0.153846154,2,0.400948108,Fig2A,
-106,106_Samajova&Gvozdik_2009,Triturus,alpestris,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,15,25,10,3.320512821,1.154700538,12,0.333333333,0.923076923,0.222057796,12,0.064102564,2,0.277992278,Fig2A,
-106,106_Samajova&Gvozdik_2009,Triturus,alpestris,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,20,25,5,2.102564103,0.53293871,12,0.153846154,0.923076923,0.222057796,12,0.064102564,3,0.192742415,Fig2A,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,,
+study_ID,study_name,species,life_stage,animal_source,body_mass_g,respiration_mode,replication_level,dive_type,mean_or_max,acclimation_temp,t1,t2,delta_t,mean_control,sd_control,n_control,se_control,mean_treatment,sd_treatment,n_treatment,se_treatment,shared_control,Q10,source
+11,011_Bruton_etal_2012,Acrochordus arafurae,juvenile,captive,85,bimodal,individual,voluntary,mean,24,24,32,8,50.17857143,8.081220356,8,2.857142857,26.96428571,5.555838995,8,1.964285714,1,0.460085222,fig1b
+11,011_Bruton_etal_2012,Acrochordus arafurae,juvenile,captive,85,bimodal,individual,voluntary,mean,32,24,32,8,56.60714286,10.17857143,9,3.392857143,32.32142857,6.964285714,9,2.321428571,2,0.496334131,fig1b
+92,092_Pratt&Franklin_2010,Acrochordus arafurae,juvenile,captive,57,bimodal,individual,voluntary,mean,28,20,26,6,53.84615385,7.653749516,11,2.307692308,43.07692308,8.291561976,11,2.5,1,0.689419101,Fig2
+92,092_Pratt&Franklin_2010,Acrochordus arafurae,juvenile,captive,57,bimodal,individual,voluntary,mean,28,20,32,12,53.84615385,7.653749516,11,2.307692308,19.61538462,7.015937057,11,2.115384615,1,0.431057412,Fig2
+92,092_Pratt&Franklin_2010,Acrochordus arafurae,juvenile,captive,57,bimodal,individual,voluntary,mean,28,26,32,6,43.07692308,8.291561976,11,2.5,19.61538462,7.015937057,11,2.115384615,2,0.269517471,Fig2
+120,120_Uriona_etal_2009,Alligator mississippiensis,juvenile,captive,242,aerial,individual,voluntary,mean,25,22,28,6,5.227272727,0.561219975,7,0.212121212,2.651515152,0.280609988,7,0.106060606,1,0.322625177,Fig3A
+90,090_Prassack_etal_2001,Apalone ferox,unspecified,wild,1123.3,bimodal,individual,voluntary,mean,25/15,15,25,10,18.6,11.7,9,3.9,5.4,3,9,1,2,0.290322581,Table2
+90,090_Prassack_etal_2001,Chrysemys picta,unspecified,wild,295.4,bimodal,individual,voluntary,mean,25/15,15,25,10,5.7,2.984962311,11,0.9,3.9,2.653299832,11,0.8,1,0.684210526,Table2
+128,128_Santos_etal_1990,Chrysemys dorbignyi,adult,wild,1755,bimodal,individual,voluntary,mean,"18,25.4",18,25.4,7.4,9.4,6.7,6,NA,4.1,5.2,10,NA,1,0.325873206,Table1
+99,099_Rodgers&Franlin_2017,Crocodylus porosus,juveniles,captive,488,aerial,individual,fright,mean,"28,34",28,34,6,18.5,8.313843876,12,2.4,9,3.741657387,14,1,1,0.300920172,In text pg.3559
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,28,28,31.5,3.5,6.666666667,4.614434491,11,1.391304348,4,0.672938363,11,0.202898551,1,0.232352008,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,28,28,35,7,6.666666667,4.614434491,11,1.391304348,2.463768116,0.672938363,11,0.202898551,1,0.241221405,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,28,31.5,35,3.5,4,0.672938363,11,0.202898551,2.463768116,0.672938363,11,0.202898551,2,0.250429367,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,31.5,28,31.5,3.5,8.202898551,1.826546986,11,0.550724638,4.637681159,3.653093972,11,1.101449275,3,0.196056644,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,31.5,28,35,7,8.202898551,1.826546986,11,0.550724638,2.173913043,0.672938363,11,0.202898551,3,0.150005401,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,31.5,31.5,35,3.5,4.637681159,3.653093972,11,1.101449275,2.173913043,0.672938363,11,0.202898551,4,0.114771017,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,35,28,31.5,3.5,7.768115942,4.710568543,11,1.420289855,4.608695652,2.787887505,11,0.84057971,5,0.224997704,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,35,28,35,7,7.768115942,4.710568543,11,1.420289855,3.391304348,1.53814483,11,0.463768116,5,0.306046375,Fig2B
+101,101_Rodgers_etal_2015,Crocodylus porosus,juveniles,captive,710,aerial,individual,fright,mean,35,31.5,35,3.5,4.608695652,2.787887505,11,0.84057971,3.391304348,1.53814483,11,0.463768116,6,0.416290397,Fig2B
+13,013_Calosi_etal_2012,Deronectes algibensis,adult,wild,0.006345,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.524833333,1.988666667,17,NA,0.546166667,0.2745,17,NA,1,0.154624334,TableS3
+13,013_Calosi_etal_2012,Deronectes angusi,adult,wild,0.008165,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,2.563166667,4.451833333,15,NA,3.768833333,4.523333333,12,NA,2,2.015664921,TableS3
+13,013_Calosi_etal_2012,Deronectes aubei,adult,wild,0.006155,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.0725,0.737333333,13,NA,0.763166667,0.471833333,13,NA,3,0.538657728,TableS3
+13,013_Calosi_etal_2012,Deronectes bicostatus,adult,wild,0.00546,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.776166667,3.043,15,NA,1.268,0.916,16,NA,4,0.54185464,TableS3
+13,013_Calosi_etal_2012,Deronectes brannanii,adult,wild,0.00918,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.001833333,0.684,15,NA,1.939,1.871333333,12,NA,5,3.322174351,TableS3
+13,013_Calosi_etal_2012,Deronectes depressicollis,adult,wild,0.008925,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,3.342833333,3.184,16,NA,1.057833333,0.762333333,11,NA,6,0.123440916,TableS3
+13,013_Calosi_etal_2012,Deronectes fairmairei,adult,wild,0.005885,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,2.837333333,1.9435,12,NA,1.0435,0.756333333,18,NA,7,0.162236758,TableS3
+13,013_Calosi_etal_2012,Deronectes hispanicus,adult,wild,0.00683,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.458666667,1.860166667,16,NA,1.487666667,2.121,17,NA,8,1.036441225,TableS3
+13,013_Calosi_etal_2012,Deronectes lareynii,adult,wild,0.00682,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,5.152166667,8.118,18,NA,2.023833333,3.026833333,12,NA,9,0.182874965,TableS3
+13,013_Calosi_etal_2012,Deronectes latus,adult,wild,0.00855,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.613,1.316,15,NA,5.946,13.58383333,16,NA,10,10.71925527,TableS3
+13,013_Calosi_etal_2012,Deronectes mazzoldi,adult,wild,0.009965,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.264833333,0.765833333,13,NA,4.262166667,6.512,13,NA,11,9.104739017,TableS3
+13,013_Calosi_etal_2012,Deronectes moestus,adult,wild,0.00631,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,7.0075,10.15416667,17,NA,3.620333333,4.351,18,NA,12,0.300967087,TableS3
+13,013_Calosi_etal_2012,Deronectes opatrinus,adult,wild,0.010575,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,4.1435,4.819,11,NA,1.549166667,1.318333333,14,NA,13,0.167165599,TableS3
+13,013_Calosi_etal_2012,Deronectes platynotus,adult,wild,0.009845,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,0.965833333,0.814,14,NA,1.206,1.241666667,18,NA,14,1.497458377,TableS3
+13,013_Calosi_etal_2012,Deronectes semirufus,adult,wild,0.009075,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,1.8865,1.800166667,17,NA,4.381,5.710333333,16,NA,15,4.627033297,TableS3
+13,013_Calosi_etal_2012,Deronectes wewalkai,adult,wild,0.007565,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,2.655166667,2.615833333,18,NA,1.381166667,1.289833333,16,NA,16,0.304731193,TableS3
+107,107_Schaffer_etal_2016,Elseya irwini,adult,wild,3813,bimodal,individual,voluntary,mean,"17,25",17,25,8,97.4,30.3,9,10.1,25.1,4.8,9,1.6,1,0.183608785,Table1
+116,116_Storey_etal_2008,Elseya albagula,juveniles,wild,133.3,bimodal,individual,voluntary,mean,unreported,20,25,5,27.6,32.45454942,7,12.26666667,15.33333333,5.644269464,7,2.133333333,1,0.308641975,Fig2A
+116,116_Storey_etal_2008,Elseya albagula,juveniles,wild,133.3,bimodal,individual,voluntary,mean,unreported,20,30,10,27.6,32.45454942,7,12.26666667,9.333333333,4.938735781,7,1.866666667,1,0.338164251,Fig2A
+116,116_Storey_etal_2008,Elseya albagula,juveniles,wild,133.3,bimodal,individual,voluntary,mean,unreported,25,30,5,15.33333333,5.644269464,7,2.133333333,9.333333333,4.938735781,7,1.866666667,2,0.370510397,Fig2A
+23,023_Clark_etal_2008,Elusor macrurus,juvenile,wild,29.88,bimodal,individual,voluntary,mean,17,17,28,11,765,521.7413152,6,213,8.36,1.420704051,6,0.58,1,0.016476272,In text pg. 304
+23,023_Clark_etal_2008,Elusor macrurus,juvenile,wild,30.04,bimodal,individual,voluntary,mean,28,17,28,11,125,55.56077753,7,21,6.78,2.539921259,7,0.96,2,0.070693833,In text pg. 304
+93,093_Priest&Franklin_2002,Emydura macquarii,adult,wild,1595,bimodal,individual,voluntary,mean,23,15,23,8,32.55813953,16.64050588,5,7.441860465,4.88372093,2.600079044,5,1.162790698,1,0.093349947,Fig1B
+93,093_Priest&Franklin_2002,Emydura macquarii,adult,wild,1595,bimodal,individual,voluntary,mean,23,15,30,15,32.55813953,16.64050588,5,7.441860465,6.511627907,3.640110661,5,1.627906977,1,0.341995189,Fig1B
+93,093_Priest&Franklin_2002,Emydura macquarii,adult,wild,1595,bimodal,individual,voluntary,mean,23,23,30,7,4.88372093,2.600079044,5,1.162790698,6.511627907,3.640110661,5,1.627906977,2,1.508286728,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,21,24,3,39.78947368,16.05944635,11,4.842105263,28.42105263,15.36120956,11,4.631578947,1,0.325766594,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,21,27,6,39.78947368,16.05944635,11,4.842105263,15.78947368,4.887657586,11,1.473684211,1,0.214288615,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,21,30,9,39.78947368,16.05944635,11,4.842105263,11.15789474,3.49118399,11,1.052631579,1,0.243478195,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,24,27,3,28.42105263,15.36120956,11,4.631578947,15.78947368,4.887657586,11,1.473684211,2,0.140958623,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,24,30,6,28.42105263,15.36120956,11,4.631578947,11.15789474,3.49118399,11,1.052631579,2,0.210492601,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis curtus,unspecified,wild,160,bimodal,individual,voluntary,mean,27,27,30,3,15.78947368,4.887657586,11,1.473684211,11.15789474,3.49118399,11,1.052631579,3,0.314327241,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,21,24,3,27.36842105,13.31485331,10,4.210526316,21.68421053,9.986139979,10,3.157894737,1,0.460234928,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,21,27,6,27.36842105,13.31485331,10,4.210526316,14.10526316,4.660198657,10,1.473684211,1,0.331298206,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,21,30,9,27.36842105,13.31485331,10,4.210526316,10.94736842,1.997227996,10,0.631578947,1,0.361280428,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,24,27,3,21.68421053,9.986139979,10,3.157894737,14.10526316,4.660198657,10,1.473684211,2,0.238483641,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,24,30,6,21.68421053,9.986139979,10,3.157894737,10.94736842,1.997227996,10,0.631578947,2,0.320093507,Fig1B
+119,119_Udyawer_etal_2016,Hydrophis elegans,unspecified,wild,1035,bimodal,individual,voluntary,mean,27,27,30,3,14.10526316,4.660198657,10,1.473684211,10.94736842,1.997227996,10,0.631578947,3,0.429630531,Fig1B
+13,013_Calosi_etal_2012,Ilybius chalconatus,adult,wild,0.053485,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,95.86,88.14,13,NA,182.42,212.5,15,NA,17,3.221541164,TableS4
+13,013_Calosi_etal_2012,Ilybius erichsonii,adult,wild,0.02945,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,222.06,242.38,11,NA,248.94,120.03,11,NA,18,1.230909406,TableS4
+13,013_Calosi_etal_2012,Ilybius hozgargantae,adult,wild,0.04733,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,274.97,216.16,18,NA,158.67,110.69,14,NA,19,0.367989536,TableS4
+13,013_Calosi_etal_2012,Ilybius meridionalis,adult,wild,0.08525,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,128,184.41,13,NA,72.23,57.62,15,NA,20,0.353342371,TableS4
+13,013_Calosi_etal_2012,Ilybius montanus,adult,wild,0.073475,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,361.68,209.78,15,NA,197.13,106.89,13,NA,21,0.3317253,TableS4
+13,013_Calosi_etal_2012,Ilybius neglectus,adult,wild,0.04459,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,535.17,415.08,8,NA,384.87,360.34,10,NA,22,0.549132197,TableS4
+13,013_Calosi_etal_2012,Ilybius pederzani,adult,wild,0.061135,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,254.21,223.13,14,NA,117.61,90.28,17,NA,23,0.246244524,TableS4
+13,013_Calosi_etal_2012,Ilybius subtilis,adult,wild,0.10132,aerial,individual,voluntary,mean,14.5 and 20,14.5,20,5.5,152.33,16.97,2,NA,102.39,118.24,2,NA,24,0.485638278,TableS4
+3,003_Aubret_etal_2015,Natrix maura ,juvenile,wild,unreported,aerial,individual,fright,mean,18,10,20,10,57.27272727,34.54246399,231,2.272727273,11.13636364,13.81698559,231,0.909090909,1,0.194444444,fig1
+3,003_Aubret_etal_2015,Natrix maura ,juvenile,wild,unreported,aerial,individual,fright,mean,18,10,30,20,57.27272727,34.54246399,231,2.272727273,3.636363636,10.3627392,231,0.681818182,1,0.251976315,fig1
+3,003_Aubret_etal_2015,Natrix maura ,juvenile,wild,unreported,aerial,individual,fright,mean,18,20,30,10,11.13636364,13.81698559,231,0.909090909,3.636363636,10.3627392,231,0.681818182,2,0.326530612,fig1
+93,093_Priest&Franklin_2002,Rheodytes leukops,adult,wild,1325,bimodal,individual,voluntary,mean,23,15,23,8,98.94736842,55.43582049,6,22.63157895,35.78947368,19.33807692,6,7.894736842,1,0.280503852,Fig1A
+93,093_Priest&Franklin_2002,Rheodytes leukops,adult,wild,1325,bimodal,individual,voluntary,mean,23,15,30,15,98.94736842,55.43582049,6,22.63157895,15.26315789,11.60284615,6,4.736842105,1,0.287625089,Fig1A
+93,093_Priest&Franklin_2002,Rheodytes leukops,adult,wild,1325,bimodal,individual,voluntary,mean,23,23,30,7,35.78947368,19.33807692,6,7.894736842,15.26315789,11.60284615,6,4.736842105,2,0.295985286,Fig1A
+97,097_Reyes&Milsom_2009,Trachemys scripta elegans,adult,captive,1110,aerial,individual,voluntary,mean,"9,14.7,20.8",9,14.7,5.7,55.8,1.414213562,8,0.5,51.3,3.959797975,8,1.4,1,0.862850151,Table2
+97,097_Reyes&Milsom_2009,Trachemys scripta elegans,adult,captive,1110,aerial,individual,voluntary,mean,"9,14.7,20.8",9,20.8,11.8,55.8,1.414213562,8,0.5,54,1.959591794,6,0.8,1,0.972594549,Table2
+97,097_Reyes&Milsom_2009,Trachemys scripta elegans,adult,captive,1110,aerial,individual,voluntary,mean,"9,14.7,20.8",14.7,20.8,6.1,51.3,3.959797975,8,1.4,54,1.959591794,6,0.8,2,1.087723922,Table2
+106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,10,15,5,5.512820513,1.954108603,12,0.564102564,3.320512821,1.154700538,12,0.333333333,1,0.362796106,Fig2A
+106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,10,20,10,5.512820513,1.954108603,12,0.564102564,2.102564103,0.53293871,12,0.153846154,1,0.381395349,Fig2A
+106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,10,25,15,5.512820513,1.954108603,12,0.564102564,0.923076923,0.222057796,12,0.064102564,1,0.303791786,Fig2A
+106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,15,20,5,3.320512821,1.154700538,12,0.333333333,2.102564103,0.53293871,12,0.153846154,2,0.400948108,Fig2A
+106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,15,25,10,3.320512821,1.154700538,12,0.333333333,0.923076923,0.222057796,12,0.064102564,2,0.277992278,Fig2A
+106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,unreported,aerial,individual,voluntary,mean,18-16,20,25,5,2.102564103,0.53293871,12,0.153846154,0.923076923,0.222057796,12,0.064102564,3,0.192742415,Fig2A
