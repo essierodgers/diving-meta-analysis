@@ -3,10 +3,13 @@ pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot)
 library(devtools)
 install_github("daniel1noble/metaAidR"); library(metaAidR)
 
+
+
 # Read in the data
 data <- read.csv("./data/lab_dive_durations_contrast.csv")
 str(data)
 data$body_mass_g <- as.numeric(data$body_mass_g)
+data$t_magnitude <- as.factor(data$t_magnitude)
 
 #separate verts from inverts
 data_verts <- data %>% filter(study_ID != 13)
@@ -26,8 +29,9 @@ PhyloA <- vcv(tree, corr = TRUE)
 genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
 names(genus) <- c("genus", "species_new")
 data_verts <- cbind(data_verts, genus)
-data_verts <- data_verts[,-28]
 data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
+data_verts <- data_verts[,-30]
+
 
 # Check same number of levels
 length(rownames(PhyloA))
@@ -50,8 +54,8 @@ plot_func(data, "sd_control", "mean_control")
 
 
 #calculating effect sizes, measure="ROM" means lnRR es, append=true means will add es to data set. yi= es estimate, vi sampling variance.
-data_verts_ROM <- escalc(m1i = mean_control, m2i = mean_treatment, n1i = n_control, n2i = n_treatment, sd1i = sd_control, sd2i = sd_treatment, append = TRUE, measure ="ROM", data = data_verts)
-data_verts_CVR <- escalc(m1i = mean_control, m2i = mean_treatment, n1i = n_control, n2i = n_treatment, sd1i = sd_control, sd2i = sd_treatment, append = TRUE, measure ="CVR", data = data_verts)
+data_verts_ROM <- escalc(m1i = mean_treatment, m2i = mean_control, n1i = n_treatment, n2i = n_control, sd1i = sd_treatment, sd2i = sd_treatment, append = TRUE, measure ="ROM", data = data_verts)
+data_verts_CVR <- escalc(m1i = mean_treatment, m2i = mean_control, n1i = n_treatment, n2i = n_control, sd1i = sd_treatment, sd2i = sd_treatment, append = TRUE, measure ="CVR", data = data_verts)
 
 
 
@@ -61,19 +65,118 @@ data_verts_CVR <- escalc(m1i = mean_control, m2i = mean_treatment, n1i = n_contr
 (log(data$mean_control) - log(data$mean_treatment) ) == (log(data$mean_control/data$mean_treatment))
 
 #error calc-residual variance at the observation level
-data_verts_CVR$obs <- 1:dim(data_verts_CVR)[1]
 data_verts_ROM$obs <- 1:dim(data_verts_ROM)[1]
-# Meta-analytic multivariate model - wihtout intercept
-model1 <- rma.mv(yi ~ -1 + scale(delta_t) + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|error), data = data_verts)
+data_verts_CVR$obs <- 1:dim(data_verts_CVR)[1]
+
+
+# Make shared control matrix
+
+make_VCV_matrix <- function(data, V, cluster, obs, type=c("vcv", "cor"), rho=0.5){
+  
+  if (missing(data)) 
+    stop("Must specify dataframe via 'data' argument.")
+  if (missing(V)) 
+    stop("Must specify name of the variance variable via 'V' argument.")
+  if (missing(cluster)) 
+    stop("Must specify name of the clustering variable via 'cluster' argument.")
+  if (missing(obs)) 
+    obs <- 1:length(V)   
+  if (missing(type)) 
+    type <- "vcv" 
+  
+  new_matrix <- matrix(0,nrow = dim(data)[1],ncol = dim(data)[1]) #make empty matrix of the same size as data length
+  rownames(new_matrix) <- data[ ,obs]
+  colnames(new_matrix) <- data[ ,obs]
+  # find start and end coordinates for the subsets
+  shared_coord <- which(data[ ,cluster] %in% data[duplicated(data[ ,cluster]), cluster]==TRUE)
+  # matrix of combinations of coordinates for each experiment with shared control
+  combinations <- do.call("rbind", tapply(shared_coord, data[shared_coord,cluster], function(x) t(utils::combn(x,2))))
+  
+  if(type == "vcv"){
+    # calculate covariance values between  values at the positions in shared_list and place them on the matrix
+    for (i in 1:dim(combinations)[1]){
+      p1 <- combinations[i,1]
+      p2 <- combinations[i,2]
+      p1_p2_cov <- rho * sqrt(data[p1,V]) * sqrt(data[p2,V])
+      new_matrix[p1,p2] <- p1_p2_cov
+      new_matrix[p2,p1] <- p1_p2_cov
+    }
+    diag(new_matrix) <- data[ ,V]   #add the diagonal
+  }
+  
+  if(type == "cor"){
+    # calculate covariance values between  values at the positions in shared_list and place them on the matrix
+    for (i in 1:dim(combinations)[1]){
+      p1 <- combinations[i,1]
+      p2 <- combinations[i,2]
+      p1_p2_cov <- rho
+      new_matrix[p1,p2] <- p1_p2_cov
+      new_matrix[p2,p1] <- p1_p2_cov
+    }
+    diag(new_matrix) <- 1   #add the diagonal of 1
+  }
+  
+  return(new_matrix)
+}
+
+
+data_verts_ROM$sc_cluster <- interaction(data_verts_ROM$study_ID, data_verts_ROM$shared_control)
+V <- make_VCV_matrix(data_verts_ROM, "vi", "sc_cluster", type = "vcv", rho = 0.5)
+corrplot(as.matrix(V))
+write.csv(V, file = "sc_matrix.csv")
+
+
+
+#FINAL MODELS- with shared control accounted for
+
+#Mean models
+#Overall effect of temperature increase on dive duration
+model1 <- rma.mv(yi = yi, V = V, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
 summary(model1)
 
+
+#Model with moderators
+model2 <- rma.mv(yi = yi, V = V, mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+summary(model2)
+
+#Effect sizes for bimodal veresus aerial breathers
+model3 <- rma.mv(yi = yi, V = V, mods = ~respiration_mode-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+summary(model3)
+
+#Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C)
+model4 <- rma.mv(yi = yi, V = V, mods = ~t_magnitude-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+summary(model4)
+
+
+#Order effect sizes
+model5 <- rma.mv(yi = yi, V = V, mods = ~order-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+summary(model5)
+
+
+
+
+
+
+
+
+
+#OLD CODE
+
 # Fit model with phylogeny-ROM
-model1_phylo <- rma.mv(yi ~ delta_t + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+model1_phylo <- rma.mv(yi ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+
+
+
+
+model1_test <- rma.mv(yi = yi, V = vi, mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+model1_test <- rma.mv(yi = yi, V = vi, mods = ~respiration_mode-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
+
 
 
 
 # Fit model with phylogeny- CVR
-model1_CVR <- rma.mv(yi ~ delta_t + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+model1_CVR <- rma.mv(yi ~   mean_t + delta_t + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+model1_CVR <- rma.mv(yi = yi, V = vi,  random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
 
 
 
@@ -83,13 +186,9 @@ model1_CVR <- rma.mv(yi ~ delta_t + log(body_mass_g), V = vi, random = list(~1|s
 
 
 
-
-
-
-
-
-
-
+# Meta-analytic multivariate model - wihtout intercept
+model1 <- rma.mv(yi ~ -1 + scale(delta_t) + log(body_mass_g), V = vi, random = list(~1|study_ID, ~1|error), data = data_verts)
+summary(model1)
 
 
 
