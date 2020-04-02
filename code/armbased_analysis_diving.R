@@ -101,13 +101,15 @@ tree_checks(data2, tree, dataCol = "species_list", type ="checks")
 
 
 #Mean model 
-model1 <- MCMCglmm(log(mean) ~  log(body_mass_g) + T, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_list, ginverse = list(species_list = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+model1 <- MCMCglmm(log(mean) ~  log(body_mass_g) + T + respiration_mode, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_list, ginverse = list(species_list = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
 summary(model1)
 plot(model1)
   
 
+
+
 #SD model
-model2 <- MCMCglmm(log(sd) ~ log(mean) + log(body_mass_g) + T, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_list, ginverse = list(species_list = A), data = data2, prior = prior_slope, nitt = 50000, burnin = 10000, thin = 30)
+model2 <- MCMCglmm(log(sd) ~ log(mean) + log(body_mass_g) + T + respiration_mode, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_list, ginverse = list(species_list = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
 summary(model2)
 plot(model2)
   
