@@ -10,6 +10,7 @@ data <- read.csv("./data/lab_dive_durations_contrast.csv")
 str(data)
 data$body_mass_g <- as.numeric(data$body_mass_g)
 data$t_magnitude <- as.factor(data$t_magnitude)
+data$study_ID <- as.factor(data$study_ID)
 
 #separate verts from inverts
 data_verts <- data %>% filter(study_ID != 13)
@@ -57,7 +58,7 @@ plot_func(data, "sd_control", "mean_control")
 data_verts_ROM <- escalc(m1i = mean_treatment, m2i = mean_control, n1i = n_treatment, n2i = n_control, sd1i = sd_treatment, sd2i = sd_treatment, append = TRUE, measure ="ROM", data = data_verts)
 data_verts_CVR <- escalc(m1i = mean_treatment, m2i = mean_control, n1i = n_treatment, n2i = n_control, sd1i = sd_treatment, sd2i = sd_treatment, append = TRUE, measure ="CVR", data = data_verts)
 
-
+data_verts_CVR <- data_verts[,-31]
 
 
 
@@ -119,12 +120,18 @@ make_VCV_matrix <- function(data, V, cluster, obs, type=c("vcv", "cor"), rho=0.5
   return(new_matrix)
 }
 
-
+#Shared control for ROM dataset
 data_verts_ROM$sc_cluster <- interaction(data_verts_ROM$study_ID, data_verts_ROM$shared_control)
 V <- make_VCV_matrix(data_verts_ROM, "vi", "sc_cluster", type = "vcv", rho = 0.5)
 corrplot(as.matrix(V))
-write.csv(V, file = "sc_matrix.csv")
+write.csv(V, file = "sc_matrix_rom.csv")
 
+
+#shared control for CVR dataset
+data_verts_CVR$sc_cluster <- interaction(data_verts_CVR$study_ID, data_verts_CVR$shared_control)
+V2 <- make_VCV_matrix(data_verts_CVR, "vi", "sc_cluster", type = "vcv", rho = 0.5)
+corrplot(as.matrix(V))
+write.csv(V, file = "sc_matrix_cvr.csv")
 
 
 #FINAL MODELS- with shared control accounted for
@@ -153,8 +160,27 @@ model5 <- rma.mv(yi = yi, V = V, mods = ~order-1, random = list(~1|study_ID, ~1|
 summary(model5)
 
 
+#CVR models
+#Overall effect of temperature increase on dive duration variability
+model1 <- rma.mv(yi = yi, V = V2, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+summary(model1)
+
+#Model with moderators
+model2 <- rma.mv(yi = yi, V = V2, mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+summary(model2)
+
+#Effect sizes for bimodal veresus aerial breathers
+model3 <- rma.mv(yi = yi, V = V2, mods = ~respiration_mode-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+summary(model3)
+
+#Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C)
+model4 <- rma.mv(yi = yi, V = V2, mods = ~t_magnitude-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+summary(model4)
 
 
+#Order effect sizes
+model5 <- rma.mv(yi = yi, V = V2, mods = ~order-1, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_CVR)
+summary(model5)
 
 
 
