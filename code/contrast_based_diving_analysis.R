@@ -3,47 +3,32 @@ pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot)
 library(devtools)
 install_github("daniel1noble/metaAidR"); library(metaAidR)
 
-
-
-# Read in the data
-data <- read.csv("./data/lab_dive_durations_contrast.csv")
-str(data)
-data$body_mass_g <- as.numeric(data$body_mass_g)
-data$t_magnitude <- as.factor(data$t_magnitude)
-data$study_ID <- as.factor(data$study_ID)
-
-#separate verts from inverts
-data_verts <- data %>% filter(study_ID != 13)
-
-
-#how many species per study
-dat <- data %>%
-  group_by(study_ID) %>%
-  summarise(n = length(unique(species))) 
-
-#importing phylogeny from timetree
-tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
-plot(tree)
-PhyloA <- vcv(tree, corr = TRUE)
-
-# Separating genus and species
-genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
-names(genus) <- c("genus", "species_new")
-data_verts <- cbind(data_verts, genus)
-data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
-data_verts <- data_verts[,-30]
-
-
-# Check same number of levels
-length(rownames(PhyloA))
-length(unique(data_verts$species_rotl))
-
-# Check what is different
-setdiff(unique(data_verts$species_rotl), sort(rownames(PhyloA)))
-
-# Fix what is different in data
-data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data_verts$species_rotl)
-data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data_verts$species_rotl)
+#data processing
+rerun = FALSE
+if(rerun = TRUE){
+  data <- read.csv("./data/lab_dive_durations_contrast.csv")
+  data$body_mass_g <- as.numeric(data$body_mass_g)
+  data$t_magnitude <- as.factor(data$t_magnitude)
+  data$study_ID <- as.factor(data$study_ID)
+  #separate verts from inverts
+  data_verts <- data %>% filter(study_ID != 13)
+  # Separating genus and species
+  genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
+  names(genus) <- c("genus", "species_new")
+  data_verts <- cbind(data_verts, genus)
+  data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
+  data_verts <- data_verts[,-31]
+  #importing phylogeny from timetree
+  tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
+  plot(tree)
+  PhyloA <- vcv(tree, corr = TRUE)
+  # Fix what is different in data
+  data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data_verts$species_rotl)
+  data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data_verts$species_rotl)
+  write.csv(data_verts, "processed_data_file.csv")
+}else{
+  datafile <- read.csv("./processed_data_file.csv")
+}
 
 
 ## Plots
@@ -57,9 +42,6 @@ plot_func(data, "sd_control", "mean_control")
 #calculating effect sizes, measure="ROM" means lnRR es, append=true means will add es to data set. yi= es estimate, vi sampling variance.
 data_verts_ROM <- escalc(m1i = mean_treatment, m2i = mean_control, n1i = n_treatment, n2i = n_control, sd1i = sd_treatment, sd2i = sd_treatment, append = TRUE, measure ="ROM", data = data_verts)
 data_verts_CVR <- escalc(m1i = mean_treatment, m2i = mean_control, n1i = n_treatment, n2i = n_control, sd1i = sd_treatment, sd2i = sd_treatment, append = TRUE, measure ="CVR", data = data_verts)
-
-data_verts_CVR <- data_verts[,-31]
-
 
 
 # Check directionality – control on numerator
@@ -186,7 +168,42 @@ summary(model5)
 
 
 
-#OLD CODE
+#OLD CODE-IGNORE
+
+
+#separate verts from inverts
+data_verts <- data %>% filter(study_ID != 13)
+
+
+#how many species per study
+dat <- data %>%
+  group_by(study_ID) %>%
+  summarise(n = length(unique(species))) 
+
+#importing phylogeny from timetree
+tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
+plot(tree)
+PhyloA <- vcv(tree, corr = TRUE)
+
+# Separating genus and species
+genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
+names(genus) <- c("genus", "species_new")
+data_verts <- cbind(data_verts, genus)
+data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
+data_verts <- data_verts[,-31]
+
+
+# Check same number of levels
+length(rownames(PhyloA))
+length(unique(data_verts$species_rotl))
+
+# Check what is different
+setdiff(unique(data_verts$species_rotl), sort(rownames(PhyloA)))
+
+# Fix what is different in data
+data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data_verts$species_rotl)
+data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data_verts$species_rotl)
+
 
 # Fit model with phylogeny-ROM
 model1_phylo <- rma.mv(yi ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, V = vi, random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), R = list(species_rotl = PhyloA), data = data_verts_ROM)
