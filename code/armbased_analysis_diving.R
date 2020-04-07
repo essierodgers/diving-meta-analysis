@@ -2,36 +2,62 @@
 pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 
 
-## Read some data
-	data <- read.csv("./data/lab_dive_durations_armbased.csv")
+#Data processing
+rerun = TRUE
+if(rerun == TRUE){
+  
+  # Bring in the data and convert key variables to required classes. 
+  data <- read.csv("./data/lab_dive_durations_armbased.csv", stringsAsFactors = FALSE)
+  data$body_mass_g <- as.numeric(data$body_mass_g)
+  data$study_ID <- as.factor(data$study_ID)
+  
+  # Separate verts from inverts
+  data_verts <- data %>% filter(study_ID != 13)
+  
+  # Separating genus and species
+  genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
+  names(genus) <- c("genus", "species_new")
+  data_verts <- cbind(data_verts, genus)
+  data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
+  data_verts <- data_verts[,-22]	
+  
+  
+  # Tcentering 
+  #Tw-centering of tempreature within each species across all studies on that species
+  sp <- split(data_verts, data_verts$species)
+  data_verts$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
+  
+  # Add in observation level random effects
+  data_verts$obs <- 1:dim(data_verts)[1]
+  
+  
+  #importing phylogeny from timetree
+  tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
+  plot(tree)
+  A <- inverseA(tree, nodes = "TIPS")$Ainv
+  
+  
+  # Fix up the species names so they match with phylogeny
+  data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
 
-str(data)
-data$n=as.numeric(data$n)
-data$study_ID=as.factor(data$study_ID)
+  # Fix what is different in data
+  data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data_verts$species_rotl)
+  data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data_verts$species_rotl)
+ 
+  
+ 
+  # Check what is different-- different number of species (16 compared to 13)
+  setdiff(unique(data_verts$species_rotl), sort(rownames(A)))
+  
+   # Write the file, so it can be loaded more easily 
+  write.csv(data_verts, "./data/data_verts.csv", row.names=FALSE)
+}else {
+  data_verts <- read.csv("./data/data_verts.csv")
+  
+}
 
-#separate verts from inverts
-	data_verts <- data %>% filter(study_ID != 13)
 
-
-	# Separating genus and species
-	genus <- as.data.frame(do.call("rbind", str_split(str_trim(data_verts$species, side = "both"), " ")))
-	names(genus) <- c("genus", "species_new")
-	data_verts <- cbind(data_verts, genus)
-	data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
-	data_verts <- data_verts[,-22]	
-
-	
-	# Tcentering 
-	#Tw-centering of tempreature within each species across all studies on that species
-	sp <- split(data_verts, data_verts$species)
-	data_verts$T_w <- do.call("rbind", lapply(sp, function(x) scale(x$T, scale = FALSE)))
-	
-	#importing phylogeny from timetree
-	tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
-	plot(tree)
-	A <- inverseA(tree, nodes = "TIPS")$Ainv
-	
-	#Tree checks function
+#Tree checks function
 	tree_checks <- function(data, tree, dataCol, type = c("checks", "prune")){
 	  type = match.arg(type)
 	  # How many unique species exist in data and tree
@@ -55,9 +81,13 @@ data$study_ID=as.factor(data$study_ID)
 	
 	
 	# Check same number of levels
-	length(rownames(A))
+	length(rownames(PhyloA))
 	length(unique(data_verts$species_rotl))
 	length(unique(data2$species_rotl))
+	
+	#check tree--not working anymore 
+	tree_checks(data_verts, A, dataCol = "species_rotl", type ="checks")
+	tree_checks(data2, A, dataCol = "species_rotl", type ="checks")
 	
 	# Sampling variance for mean
 	m_sv <- function(mean, sd, n){
@@ -70,14 +100,9 @@ data$study_ID=as.factor(data$study_ID)
 	  (1/2)*(n-1)
 	}
 	
-	# Now we can calculate the sampling variance for all mean estimates
-	
+	# Calculate the sampling variance for all mean estimates
 	data_verts$mean_sv <- with(data_verts, m_sv(mean, sd, n))
 	data_verts$sd_sv <- with(data_verts, sd_sv(n))
-	
-	
-	# Add in observation level random effects
-	data_verts$obs <- 1:dim(data_verts)[1]
 	
 	
 	# Exploratory analysis 
@@ -89,7 +114,7 @@ data$study_ID=as.factor(data$study_ID)
 
 	
 	
-		# Bayesian Priors              
+# Bayesian Priors              
 	data2 <- data_verts[complete.cases(data_verts[,c("acclimation_temp", "body_mass_g")]),]
 	prior_slope <- list(R = list(V = 1, nu = 0.001),
 	                    G = list(G1 = list(V=1, nu = 0.02),
@@ -100,25 +125,19 @@ data$study_ID=as.factor(data$study_ID)
 	                           G2 = list(V = 1, nu = 0.02)))
 	
 	
+	###########################################
+	#Mean models 
+	###########################################	
 	
-	# Check what is different-- different number of species (16 compared to 13)
-	setdiff(unique(data2$species_rotl), sort(rownames(A)))
-	
-	# Fix what is different species name
-	data2$species_rotl <- ifelse(data2$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data2$species_rotl)
-	
-	#check tree
-	tree_checks(data2, A, dataCol = "species_rotl", type ="checks")
-	
-	
-	
-	
-	#Mean model 
 	model1 <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
 	summary(model1)
 	plot(model1)
 	
 	
+	
+	###########################################
+	#Variance models – CVR models
+	###########################################
 	
 	#SD model
 	model2 <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
@@ -136,10 +155,6 @@ data$study_ID=as.factor(data$study_ID)
 
   
   
-#Adding species list
-data_verts$species_list <- paste0(data_verts$genus, "_", data_verts$species_new)
-data2$species_list <- paste0(data2$genus, "_", data2$species_new)
-  
 
 
 
@@ -148,7 +163,7 @@ data2$species_list <- paste0(data2$genus, "_", data2$species_new)
   
   
   
-  
+ 
 
   
 
@@ -156,6 +171,22 @@ data2$species_list <- paste0(data2$genus, "_", data2$species_new)
 
 
 #OLD CODE- IGNORE FOR NOW
+	#Adding species list
+	data_verts$species_list <- paste0(data_verts$genus, "_", data_verts$species_new)
+	data2$species_list <- paste0(data2$genus, "_", data2$species_new)
+	
+# Check what is different-- different number of species (16 compared to 13)
+setdiff(unique(data2$species_rotl), sort(rownames(A)))
+
+# Fix what is different species name
+data2$species_rotl <- ifelse(data2$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data2$species_rotl)
+# Check what is different-- different number of species (16 compared to 13)
+setdiff(unique(data2$species_rotl), sort(rownames(A)))
+
+# Fix what is different species name
+data2$species_rotl <- ifelse(data2$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data2$species_rotl)
+
+
 
 # Tcentering 
 #Tw-centering of tempreature within each species across all studies on that species
@@ -278,6 +309,13 @@ summary(model5)
 
 model4 <- MCMCglmm(log(mean) ~ scale(acclimation_temp) + scale(body_mass_g) + T, mev = data2$mean_sv, random = ~us(1):study_ID + us(1):species, data = data2, prior = prior_int, nitt = 50000, burnin = 10000, thin = 30)
 summary(model4)
+
+
+
+
+
+# Check what is different-- different number of species (16 compared to 13)
+setdiff(unique(data2$species_rotl), sort(rownames(PhyloA)))
 
 ########## Phylogeny
 ### Access taxon relationships from Open Tree of Life
