@@ -5,6 +5,7 @@
 # Load libraries
   pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot)
   library(devtools)
+  install.packages("Rtools")
   install_github("daniel1noble/metaAidR"); library(metaAidR)
   source("./code/func.R")
 
@@ -83,6 +84,9 @@
   # Create the SC V matrix
       V <- metaAidR::make_VCV_matrix(data_verts_ROM, "vi", "sc_cluster", 
                                   type = "vcv", rho = 0.5)
+      V <- make_VCV_matrix(data_verts_ROM, "vi", "sc_cluster", 
+                                     type = "vcv", rho = 0.5)
+      
   
   # Look at the shared control (co)variance matrix
     corrplot(as.matrix(V), is.corr = FALSE)
@@ -119,6 +123,10 @@
 
   # Do some model checks
     hist(residuals(model2)) # outliers -3; maybe check this doesn't change anything.
+    plot(residuals(model2))
+    residuals(model2)
+  #remove outlier- need to updated V afterwards
+    data_verts_ROM <- data_verts_ROM[-48,]
 
 # Effect sizes for bimodal versus aerial breathers
   model3 <- rma.mv(yi = yi, V = V, 
