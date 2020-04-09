@@ -5,6 +5,7 @@
 # Load libraries
   pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot)
   library(devtools)
+  install.packages("Rtools")
   install_github("daniel1noble/metaAidR"); library(metaAidR)
   source("./code/func.R")
 
@@ -84,6 +85,9 @@
   # Create the SC V matrix
       V <- metaAidR::make_VCV_matrix(data_verts_ROM, "vi", "sc_cluster", 
                                   type = "vcv", rho = 0.5)
+      V <- make_VCV_matrix(data_verts_ROM, "vi", "sc_cluster", 
+                                     type = "vcv", rho = 0.5)
+      
   
   # Look at the shared control (co)variance matrix
     corrplot(as.matrix(V), is.corr = FALSE)
@@ -104,98 +108,218 @@
 ###########################################
 
 # Overall effect of temperature increase on dive duration
-  model1_RR <- rma.mv(yi = yi, V = V, 
+
+  model1.RR <- rma.mv(yi = yi, V = V, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model1_RR)
+  summary(model1.RR)
 
 # Model with moderators
-  model2_RR <- rma.mv(yi = yi, V = V, 
+  model2.RR <- rma.mv(yi = yi, V = V, 
                    mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model2_RR)
-
+  
   data_verts_ROM %>% group_by(respiration_mode) %>% summarise(mean_t = mean(mean_t))
 
-  # Do some model checks
-    hist(residuals(model2)) # outliers -3; maybe check this doesn't change anything.
+  summary(model2.RR)
 
+  # Do some model checks
+    hist(residuals(model2.RR)) # outliers -3; maybe check this doesn't change anything.
+    plot(residuals(model2.RR))
+    residuals(model2.RR)
+  #remove outlier- need to updated V afterwards
+    data_verts_ROM_outlier_removed <- data_verts_ROM[-48,]
+ 
+   #update V matrix
+    V_no_outlier <- make_VCV_matrix(data_verts_ROM_outlier_removed, "vi", "sc_cluster", 
+                         type = "vcv", rho = 0.5)
+    
+    #rerun model without outlier
+    model2.RR.nooutlier <- rma.mv(yi = yi, V = V_no_outlier, 
+                        mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
+                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                        R = list(species_rotl = PhyloA), test = "t",
+                        data = data_verts_ROM_outlier_removed)
+    summary(model2.RR.nooutlier)
+    #rerun model checks
+    hist(residuals(model2.RR.nooutlier))
+    
+    
 # Effect sizes for bimodal versus aerial breathers
-  model3_RR <- rma.mv(yi = yi, V = V, 
-                   mods = ~mean_t + delta_t + respiration_mode-1, 
+  model3.RR <- rma.mv(yi = yi, V = V, 
+                   mods = ~ mean_t + delta_t + respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_ROM)
-  summary(model3_RR)
+  summary(model3.RR)
+
+  # Do some model checks
+  hist(residuals(model3.RR)) # outliers -3; maybe check this doesn't change anything.
+  plot(residuals(model3.RR))
+  residuals(model3.RR)
+  
+  #rerun without outlier
+  model3.RR.nooutlier <- rma.mv(yi = yi, V = V_no_outlier, 
+                      mods = ~ mean_t + delta_t + respiration_mode-1, 
+                      random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                      R = list(species_rotl = PhyloA), test = "t", 
+                      data = data_verts_ROM_outlier_removed)
+  summary(model3.RR.nooutlier)
+  
 
 # Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C). Controlling for the average temperature of the treatments
-  model4_RR <- rma.mv(yi = yi, V = V, 
+
+  model4.RR <- rma.mv(yi = yi, V = V, 
                    mods = ~ mean_t + t_magnitude-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model4_RR)
+  summary(model4.RR)
+  
   # Model check
-  hist(residuals(model4)) #  again, need to check that this -3 isn't messing with things
+  hist(residuals(model4.RR)) #  again, need to check that this -3 isn't messing with things
 
-data_verts_ROM %>% group_by(t_magnitude) %>% summarise(mean_t = mean(scale(mean_t)))
-
+  #rerun without outlier 
+    model4.RR.nooutlier <- rma.mv(yi = yi, V = V_no_outlier, 
+                      mods = ~ mean_t + t_magnitude-1, 
+                      random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                      R = list(species_rotl = PhyloA), test = "t",
+                      data = data_verts_ROM_outlier_removed)
+  summary(model4.RR.nooutlier)
+  hist(residuals(model4.RR.nooutlier))
+  
+  
 # Order effect sizes
-  model5_RR <- rma.mv(yi = yi, V = V, 
-                   mods = ~mean_t + delta_t + order-1, 
+  model5.RR <- rma.mv(yi = yi, V = V, 
+                   mods = ~ mean_t + t_magnitude + order-1, 
                    random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model5_RR)
-
+  summary(model5.RR)
+  
+  # Model check
+  hist(residuals(model5.RR)) #  again, need to check that this -3 isn't messing with things
+  
+  #rerun without outlier
+  model5.RR.nooutlier <- rma.mv(yi = yi, V = V_no_outlier, 
+                                mods = ~ mean_t + t_magnitude + order-1, 
+                                random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                                R = list(species_rotl = PhyloA), test = "t",
+                                data = data_verts_ROM_outlier_removed)
+  summary(model5.RR.nooutlier)
+  hist(residuals(model5.RR.nooutlier))
+  
 ###########################################
 #Variance models – CVR models
 ###########################################
 
 #Overall effect of temperature increase on dive duration variability
-  model1_CVR <- rma.mv(yi = yi, V = V2, 
+  model6.CVR <- rma.mv(yi = yi, V = V2, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_CVR)
-  summary(model1_CVR)
+  summary(model6.CVR)
+
 
 #Model with moderators
-  model2_CVR <- rma.mv(yi = yi, V = V2, 
+  model7.CVR <- rma.mv(yi = yi, V = V2, 
                    mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
-  summary(model2_CVR)
+  summary(model7.CVR)
 
-#Effect sizes for bimodal versus aerial breathers
-  model3_CVR <- rma.mv(yi = yi, V = V2, 
-                   mods = ~respiration_mode-1, 
+     # Do some model checks
+      hist(residuals(model7.CVR)) # outlier around 3; maybe check this doesn't change anything.
+      plot(residuals(model7.CVR))
+      residuals(model7.CVR)
+      
+      #remove outlier- need to updated V afterwards
+      data_verts_CVR_outlier_removed <- data_verts_CVR[-48,]
+  
+      #update V matrix
+    V2_no_outlier <- make_VCV_matrix(data_verts_CVR_outlier_removed, 
+                                    "vi", "sc_cluster", 
+                                  type = "vcv", rho = 0.5)
+  
+      #rerun model without outlier
+      model7.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
+                           mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
+                           random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                           R = list(species_rotl = PhyloA), test = "t", 
+                           data = data_verts_CVR_outlier_removed)
+      summary(model7.CVR.nooutlier)
+      hist(residuals(model7.CVR.nooutlier))
+  
+  model8.CVR <- rma.mv(yi = yi, V = V2, 
+                   mods = ~ mean_t + delta_t + respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
-  summary(model3_CVR)
+  summary(model8.CVR)
+  
+  # Do some model checks
+  hist(residuals(model8.CVR)) # outlier around 3; maybe check this doesn't change anything.
+  
+  #rerun model without outlier
+  model8.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
+                       mods = ~ mean_t + delta_t + respiration_mode-1, 
+                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                       R = list(species_rotl = PhyloA), test = "t", 
+                       data = data_verts_CVR_outlier_removed)
+  summary(model8.CVR.nooutlier)
+  hist(residuals(model8.CVR.nooutlier))
 
 #Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C)
-  model4_CVR <- rma.mv(yi = yi, V = V2, 
-                   mods = ~mean_t + t_magnitude-1, 
+  model9.CVR <- rma.mv(yi = yi, V = V2, 
+                   mods = ~ mean_t + t_magnitude-1, 
                   random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                   R = list(species_rotl = PhyloA), test = "t", 
                   data = data_verts_CVR)
-  summary(model4_CVR)
+  summary(model9.CVR)
 
-#Order effect sizes
-  model5_CVR <- rma.mv(yi = yi, V = V2, 
-                   mods = ~order-1, 
+  # Do some model checks
+  hist(residuals(model9.CVR)) # outlier around 3; maybe check this doesn't change anything.
+  
+  
+  #rerun model without outlier
+    model9.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
+                       mods = ~ mean_t + t_magnitude-1, 
+                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                       R = list(species_rotl = PhyloA), test = "t", 
+                       data = data_verts_CVR_outlier_removed) 
+  summary(model9.CVR.nooutlier) #only 10+ magnitude significant now
+  hist(residuals(model9.CVR.nooutlier))
+  
+  
+  #Order effect sizes
+      model10.CVR <- rma.mv(yi = yi, V = V2, 
+                   mods = ~ mean_t + t_magnitude + order-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
-  summary(model5_CVR)
+      summary(model10.CVR)
+
+  
+      # Do some model checks
+      hist(residuals(model10.CVR)) # outlier around 3; maybe check this doesn't change anything.
+      
+      #rerun model without outlier
+      model10.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
+                            mods = ~ mean_t + t_magnitude + order-1, 
+                            random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                            R = list(species_rotl = PhyloA), test = "t", 
+                            data = data_verts_CVR_outlier_removed)
+      summary(model10.CVR.nooutlier)
+      hist(residuals(model10.CVR.nooutlier))
 
 
-### PLots
+###################################
+## Figures
+##################################
 
   devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
   library(orchaRd)
@@ -217,5 +341,3 @@ str(model5_RR)
 extract = function(model){
 table = data.frame(est = model$ beta, ci.lb = model$ ci.lb, ci.ub =model$ ci.ub)
 return(table)
-}
-extract(model5_RR)
