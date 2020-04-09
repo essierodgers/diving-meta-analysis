@@ -1,6 +1,7 @@
 # Packages
 pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 
+source("./code/func.R")
 
 #Data processing
 rerun = TRUE
@@ -57,65 +58,65 @@ if(rerun == TRUE){
 }
 
 
-#Tree checks function
-	tree_checks <- function(data, tree, dataCol, type = c("checks", "prune")){
-	  type = match.arg(type)
-	  # How many unique species exist in data and tree
-	  Numbers <- matrix(nrow = 2, ncol = 1)
-	  Numbers[1,1] <- length(unique(data$spp_name_phylo)) 
-	  Numbers[2,1] <- length(tree$tip.label) 
-	  rownames(Numbers)<- c("Species in data:", "Species in tree:")
-	  # Missing species or species not spelt correct      
-	  species_list1= setdiff(sort(tree$tip.label), sort(unique(data[,dataCol])))
-	  species_list2= setdiff(sort(unique(data[,dataCol])), sort(tree$tip.label) )
-	  if(type == "checks"){
-	    return(list(SpeciesNumbers = data.frame(Numbers), 
-	                Species_InTree_But_NotData=species_list1, 
-	                Species_InData_But_NotTree=species_list2))
-	  }
-	  if(type == "prune"){
-	    if(length(species_list2) >=1) stop("Sorry, you can only prune a tree when you have no taxa existing in the data that are not in the tree")
-	    return(ape::drop.tip(tree, species_list1))
-	  }
-	}
-	
-	
+# Sampling variance for mean
+m_sv <- function(mean, sd, n){
+  #page 148 Nakagawa et al 2015
+  (sd^2) / (n*(mean^2))
+}
+
+sd_sv <- function(n){
+  #page 148 Nakagawa et al 2015
+  (1/2)*(n-1)
+}
+
+# Calculate the sampling variance for all mean estimates
+data_verts$mean_sv <- with(data_verts, m_sv(mean, sd, n))
+data_verts$sd_sv <- with(data_verts, sd_sv(n))
+
+
+# Exploratory analysis 
+with(data_verts, plot(log(mean) ~ log(sd)))
+with(data_verts, hist(log(mean)))
+with(data_verts, hist(log(sd)))
+ggplot(data_verts, aes(y = log(mean), x=T, colour= species))+
+  geom_point()
+
+# Bayesian Priors              
+data2 <- data_verts[complete.cases(data_verts[,c("T_w", "body_mass_g", "respiration_mode")]),]
+prior_slope <- list(R = list(V = 1, nu = 0.001),
+                    G = list(G1 = list(V=1, nu = 0.02),
+                             G2 = list(V = diag(2), nu = 2)))
+
+prior_int <- list(R = list(V = 1, nu = 0.001),
+                  G = list(G1 = list(V=1, nu = 0.02),
+                           G2 = list(V = 1, nu = 0.02)))
+
 	# Check same number of levels
-	length(rownames(PhyloA))
+	length(rownames(A))
 	length(unique(data_verts$species_rotl))
 	length(unique(data2$species_rotl))
 	
+
 	#check tree--not working anymore 
 	tree_checks(data_verts, A, dataCol = "species_rotl", type ="checks")
 	tree_checks(data2, A, dataCol = "species_rotl", type ="checks")
 	
-	# Sampling variance for mean
-	m_sv <- function(mean, sd, n){
-	  #page 148 Nakagawa et al 2015
-	  (sd^2) / (n*(mean^2))
-	}
-	
-	sd_sv <- function(n){
-	  #page 148 Nakagawa et al 2015
-	  (1/2)*(n-1)
-	}
-	
-	# Calculate the sampling variance for all mean estimates
-	data_verts$mean_sv <- with(data_verts, m_sv(mean, sd, n))
-	data_verts$sd_sv <- with(data_verts, sd_sv(n))
 	
 	
-	# Exploratory analysis 
-	with(data_verts, plot(log(mean) ~ log(sd)))
-	with(data_verts, hist(log(mean)))
-	with(data_verts, hist(log(sd)))
-	ggplot(data_verts, aes(y = log(mean), x=T, colour= species))+
-	  geom_point()
 
+	###########################################
+	#Mean models 
+	###########################################	
 	
+	model1.mean <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	summary(model1.mean)
+	plot(model1.mean)
 	
-# Bayesian Priors              
-	data2 <- data_verts[complete.cases(data_verts[,c("acclimation_temp", "body_mass_g")]),]
+	#rerun with outlier
+	data_verts_outlier_removed <- data_verts[-48,]
+	
+	# Bayesian Priors- without outlier             
+	data2_outlier_removed <- data_verts[complete.cases(data_verts_outlier_removed[,c("T_w", "body_mass_g", "respiration_mode")]),]
 	prior_slope <- list(R = list(V = 1, nu = 0.001),
 	                    G = list(G1 = list(V=1, nu = 0.02),
 	                             G2 = list(V = diag(2), nu = 2)))
@@ -124,28 +125,24 @@ if(rerun == TRUE){
 	                  G = list(G1 = list(V=1, nu = 0.02),
 	                           G2 = list(V = 1, nu = 0.02)))
 	
-	
-	###########################################
-	#Mean models 
-	###########################################	
-	
-	model1 <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
-	summary(model1)
-	plot(model1)
-	
-	
+	#rerun model- doesn't change estimates very much
+	model1.mean.nooutlier <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, mev = data2_outlier_removed$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2_outlier_removed, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	summary(model1.mean.nooutlier)
+	plot(model1.mean.nooutlier)
 	
 	###########################################
 	#Variance models – CVR models
 	###########################################
 	
 	#SD model
-	model2 <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
-	summary(model2)
-	plot(model2)
+	model2.sd <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	summary(model2.sd)
+	plot(model2.sd)
 
-
-
+  #rerun model without outlier
+	model2.sd.nooutlier <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, mev = data2_outlier_removed$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2_outlier_removed, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	summary(model2.sd.nooutlier)
+	plot(model2.sd.nooutlier)
 
 
 
