@@ -195,7 +195,7 @@
   
 # Order effect sizes
   model5.RR <- rma.mv(yi = yi, V = V, 
-                   mods = ~ mean_t + t_magnitude + order-1, 
+                   mods = ~ mean_t + delta_t + order-1, 
                    random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
@@ -206,7 +206,7 @@
   
   #rerun without outlier
   model5.RR.nooutlier <- rma.mv(yi = yi, V = V_no_outlier, 
-                                mods = ~ mean_t + t_magnitude + order-1, 
+                                mods = ~ mean_t + delta_t + order-1, 
                                 random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                                 R = list(species_rotl = PhyloA), test = "t",
                                 data = data_verts_ROM_outlier_removed)
