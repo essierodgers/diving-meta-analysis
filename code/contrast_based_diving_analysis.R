@@ -53,24 +53,24 @@
     
     
 # Have a look at the mean-variance relationship
-  plot_func(data_verts, "sd_control", "mean_control")
+  plot_func(data_verts, "sd_t1", "mean_t1")
 
 # Calculating effect sizes, measure="ROM" means lnRR es, append=true means will add es to data set. yi= es estimate, vi sampling variance.
-  data_verts_ROM <- escalc(m1i = mean_treatment, 
-                           m2i = mean_control, 
-                           n1i = n_treatment, 
-                           n2i = n_control, 
-                           sd1i = sd_treatment, 
-                           sd2i = sd_treatment, 
+  data_verts_ROM <- escalc(m1i = mean_t2, 
+                           m2i = mean_t1, 
+                           n1i = n_t2, 
+                           n2i = n_t1, 
+                           sd1i = sd_t2, 
+                           sd2i = sd_t1, 
                            append = TRUE, measure ="ROM", 
                            data = data_verts)
 
-  data_verts_CVR <- escalc(m1i = mean_treatment, 
-                           m2i = mean_control, 
-                           n1i = n_treatment, 
-                           n2i = n_control, 
-                           sd1i = sd_treatment, 
-                           sd2i = sd_treatment, 
+  data_verts_CVR <- escalc(m1i = mean_t2, 
+                           m2i = mean_t1, 
+                           n1i = n_t2, 
+                           n2i = n_t1, 
+                           sd1i = sd_t2, 
+                           sd2i = sd_t1, 
                            append = TRUE, measure ="CVR", 
                            data = data_verts)
 
