@@ -3,9 +3,8 @@
   rm(list = ls()) 
 
 # Load libraries
-  pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot)
-  library(devtools)
-  install.packages("Rtools")
+  pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, devtools)
+
   install_github("daniel1noble/metaAidR"); library(metaAidR)
   source("./code/func.R")
 
@@ -34,7 +33,7 @@
     # Write the file, so it can be loaded more easily 
         write.csv(data_verts, "./data/data_verts.csv", row.names=FALSE)
   }else {
-                  data_verts <- read.csv("./data/data_verts.csv")
+                  data_verts <- read.csv("./data/data_verts.csv", stringsAsFactors=FALSE)
       data_verts$t_magnitude <- ordered(data_verts$t_magnitude, 
                                   levels = c("3", "5-7", "8-9", "10plus"))
   }
@@ -44,7 +43,7 @@
  # Import TimeTree phylogeny
         tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
         plot(tree)
-
+        
     # Create a phylogenetic correlation matrix
         PhyloA <- vcv(tree, corr = TRUE)
     
