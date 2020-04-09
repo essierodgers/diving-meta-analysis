@@ -108,41 +108,53 @@ prior_int <- list(R = list(V = 1, nu = 0.001),
 	#Mean models 
 	###########################################	
 	
-	model1.mean <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
-	summary(model1.mean)
-	plot(model1.mean)
+	    model1.mean <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, 
+	                            mev = data2$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, 
+	                            ginverse = list(species_rotl = A), 
+	                            data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	    summary(model1.mean)
+	    plot(model1.mean)
 	
-	#rerun with outlier
-	data_verts_outlier_removed <- data_verts[-48,]
+    	#rerun with outlier
+    	data_verts_outlier_removed <- data_verts[-48,]
 	
-	# Bayesian Priors- without outlier             
-	data2_outlier_removed <- data_verts[complete.cases(data_verts_outlier_removed[,c("T_w", "body_mass_g", "respiration_mode")]),]
-	prior_slope <- list(R = list(V = 1, nu = 0.001),
+    	# Bayesian Priors- without outlier             
+    	data2_outlier_removed <- data_verts[complete.cases(data_verts_outlier_removed[,c("T_w", "body_mass_g", "respiration_mode")]),]
+	    prior_slope <- list(R = list(V = 1, nu = 0.001),
 	                    G = list(G1 = list(V=1, nu = 0.02),
 	                             G2 = list(V = diag(2), nu = 2)))
 	
-	prior_int <- list(R = list(V = 1, nu = 0.001),
+	    prior_int <- list(R = list(V = 1, nu = 0.001),
 	                  G = list(G1 = list(V=1, nu = 0.02),
 	                           G2 = list(V = 1, nu = 0.02)))
 	
-	#rerun model- doesn't change estimates very much
-	model1.mean.nooutlier <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode, mev = data2_outlier_removed$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2_outlier_removed, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
-	summary(model1.mean.nooutlier)
-	plot(model1.mean.nooutlier)
+    	#rerun model- doesn't change estimates very much
+    	model1.mean.nooutlier <- MCMCglmm(log(mean) ~  T_w + log(body_mass_g) + respiration_mode,
+    	                                  mev = data2_outlier_removed$mean_sv, random = ~us(1):study_ID + us(1+T):species_rotl,
+    	                                  ginverse = list(species_rotl = A),
+    	                                  data = data2_outlier_removed, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	    summary(model1.mean.nooutlier)
+	    plot(model1.mean.nooutlier)
 	
 	###########################################
 	#Variance models – CVR models
 	###########################################
 	
-	#SD model
-	model2.sd <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
-	summary(model2.sd)
-	plot(model2.sd)
+	    #SD model
+    	model2.sd <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode,
+    	                      mev = data2$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, 
+    	                      ginverse = list(species_rotl = A), 
+    	                      data = data2, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	    summary(model2.sd)
+	    plot(model2.sd)
 
-  #rerun model without outlier
-	model2.sd.nooutlier <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, mev = data2_outlier_removed$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, ginverse = list(species_rotl = A), data = data2_outlier_removed, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
-	summary(model2.sd.nooutlier)
-	plot(model2.sd.nooutlier)
+     #rerun model without outlier
+    	model2.sd.nooutlier <- MCMCglmm(log(sd) ~ log(mean) + T_w + log(body_mass_g) + respiration_mode, 
+    	                                mev = data2_outlier_removed$sd_sv, random = ~us(1):study_ID + us(1+T):species_rotl, 
+    	                                ginverse = list(species_rotl = A), 
+    	                                data = data2_outlier_removed, prior = prior_slope, nitt = 130000, burnin = 30000, thin = 50)
+	 summary(model2.sd.nooutlier)
+	 plot(model2.sd.nooutlier)
 
 
 

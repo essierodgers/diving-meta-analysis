@@ -173,6 +173,7 @@
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
   summary(model4.RR)
+  
   # Model check
   hist(residuals(model4.RR)) #  again, need to check that this -3 isn't messing with things
 
@@ -183,7 +184,7 @@
                       R = list(species_rotl = PhyloA), test = "t",
                       data = data_verts_ROM_outlier_removed)
   summary(model4.RR.nooutlier)
-  
+  hist(residuals(model4.RR.nooutlier))
   
   
 # Order effect sizes
@@ -204,6 +205,7 @@
                                 R = list(species_rotl = PhyloA), test = "t",
                                 data = data_verts_ROM_outlier_removed)
   summary(model5.RR.nooutlier)
+  hist(residuals(model5.RR.nooutlier))
   
   
 ###########################################
@@ -216,6 +218,7 @@
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_CVR)
   summary(model6.CVR)
+
 
 #Model with moderators
   model7.CVR <- rma.mv(yi = yi, V = V2, 
@@ -280,14 +283,13 @@
   
   
   #rerun model without outlier
-  
-  model9.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
+    model9.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
                        mods = ~ mean_t + t_magnitude-1, 
                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                        R = list(species_rotl = PhyloA), test = "t", 
                        data = data_verts_CVR_outlier_removed) 
   summary(model9.CVR.nooutlier) #only 10+ magnitude significant now
-    hist(residuals(model9.CVR.nooutlier))
+  hist(residuals(model9.CVR.nooutlier))
   
   
   #Order effect sizes
