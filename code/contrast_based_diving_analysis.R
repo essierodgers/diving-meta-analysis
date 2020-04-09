@@ -9,8 +9,8 @@
   source("./code/func.R")
 
 #data processing
-  rerun = TRUE
-  if(rerun == TRUE){
+  rerun_data = FALSE
+  if(rerun_data == TRUE){
 
     # Bring in the data and convert key variables to required classes. 
                   data <- read.csv("./data/lab_dive_durations_contrast.csv", stringsAsFactors = FALSE)
@@ -30,7 +30,15 @@
       data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
       data_verts <- data_verts[,-31]
 
-    # Import TimeTree phylogeny
+    # Write the file, so it can be loaded more easily 
+        write.csv(data_verts, "./data/data_verts.csv", row.names=FALSE)
+  }else {
+                  data_verts <- read.csv("./data/data_verts.csv")
+      data_verts$t_magnitude <- ordered(data_verts$t_magnitude, 
+                                  levels = c("3", "5-7", "8-9", "10plus"))
+  }
+
+ # Import TimeTree phylogeny
         tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
         plot(tree)
 
@@ -41,13 +49,6 @@
     data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data_verts$species_rotl)
     data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data_verts$species_rotl)
     
-    # Write the file, so it can be loaded more easily 
-        write.csv(data_verts, "./data/data_verts.csv", row.names=FALSE)
-  }else {
-                  data_verts <- read.csv("./data/data_verts.csv")
-      data_verts$t_magnitude <- ordered(data_verts$t_magnitude, 
-                                  levels = c("3", "5-7", "8-9", "10plus"))
-  }
 
 # Have a look at the mean-variance relationship
   plot_func(data_verts, "sd_control", "mean_control")
@@ -103,91 +104,118 @@
 ###########################################
 
 # Overall effect of temperature increase on dive duration
-  model1 <- rma.mv(yi = yi, V = V, 
+  model1_RR <- rma.mv(yi = yi, V = V, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model1)
+  summary(model1_RR)
 
 # Model with moderators
-  model2 <- rma.mv(yi = yi, V = V, 
+  model2_RR <- rma.mv(yi = yi, V = V, 
                    mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model2)
+  summary(model2_RR)
+
+  data_verts_ROM %>% group_by(respiration_mode) %>% summarise(mean_t = mean(mean_t))
 
   # Do some model checks
     hist(residuals(model2)) # outliers -3; maybe check this doesn't change anything.
 
 # Effect sizes for bimodal versus aerial breathers
-  model3 <- rma.mv(yi = yi, V = V, 
-                   mods = ~respiration_mode-1, 
+  model3_RR <- rma.mv(yi = yi, V = V, 
+                   mods = ~mean_t + delta_t + respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_ROM)
-  summary(model3)
+  summary(model3_RR)
 
 # Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C). Controlling for the average temperature of the treatments
-  model4 <- rma.mv(yi = yi, V = V, 
-                   mods = ~ scale(mean_t) + t_magnitude-1, 
+  model4_RR <- rma.mv(yi = yi, V = V, 
+                   mods = ~ mean_t + t_magnitude-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model4)
+  summary(model4_RR)
   # Model check
   hist(residuals(model4)) #  again, need to check that this -3 isn't messing with things
 
+data_verts_ROM %>% group_by(t_magnitude) %>% summarise(mean_t = mean(scale(mean_t)))
+
 # Order effect sizes
-  model5 <- rma.mv(yi = yi, V = V, 
-                   mods = ~order-1, 
+  model5_RR <- rma.mv(yi = yi, V = V, 
+                   mods = ~mean_t + delta_t + order-1, 
                    random = list(~1|study_ID, ~1|species_rotl,  ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
-  summary(model5)
+  summary(model5_RR)
 
 ###########################################
 #Variance models – CVR models
 ###########################################
 
 #Overall effect of temperature increase on dive duration variability
-  model1 <- rma.mv(yi = yi, V = V2, 
+  model1_CVR <- rma.mv(yi = yi, V = V2, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_CVR)
-  summary(model1)
+  summary(model1_CVR)
 
 #Model with moderators
-  model2 <- rma.mv(yi = yi, V = V2, 
+  model2_CVR <- rma.mv(yi = yi, V = V2, 
                    mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
-  summary(model2)
+  summary(model2_CVR)
 
 #Effect sizes for bimodal versus aerial breathers
-  model3 <- rma.mv(yi = yi, V = V2, 
+  model3_CVR <- rma.mv(yi = yi, V = V2, 
                    mods = ~respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
-  summary(model3)
+  summary(model3_CVR)
 
 #Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C)
-  model4 <- rma.mv(yi = yi, V = V2, 
-                   mods = ~t_magnitude-1, 
+  model4_CVR <- rma.mv(yi = yi, V = V2, 
+                   mods = ~mean_t + t_magnitude-1, 
                   random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                   R = list(species_rotl = PhyloA), test = "t", 
                   data = data_verts_CVR)
-  summary(model4)
+  summary(model4_CVR)
 
 #Order effect sizes
-  model5 <- rma.mv(yi = yi, V = V2, 
+  model5_CVR <- rma.mv(yi = yi, V = V2, 
                    mods = ~order-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
-  summary(model5)
+  summary(model5_CVR)
 
 
+### PLots
 
+  devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
+  library(orchaRd)
+  source("./code/revised_orchard.R")
+
+  table_results <- mod_results(model5_RR, mod_cat = "order", mod_cont=c("scale(mean_t)", "scale(delta_t)"))
+  print(table_results)
+
+  orchard_plot(table_results, mod = "order", xlab = "Order", angle=45) + 
+  annotate(geom = "text", label = paste0("n = ",as.character(study$n)), x= 1, y = c(1:4)+0.3)
+
+  study <- data_verts_CVR %>% group_by(order) %>% summarise(n = length(unique(study_ID)))
+
+  orchard_plot(table_results, mod = "order", xlab = "Order", angle=45) + 
+  annotate(geom = "text", label = paste0("n = ",as.character(study$n)), x= 1, y = c(1:4)+0.3)
+
+str(model5_RR)
+
+extract = function(model){
+table = data.frame(est = model$ beta, ci.lb = model$ ci.lb, ci.ub =model$ ci.ub)
+return(table)
+}
+extract(model5_RR)
