@@ -29,7 +29,7 @@
     
     # Fix up the species names so they match with phylogeny
       data_verts$species_rotl <- paste0(data_verts$genus, "_", data_verts$species_new)
-      data_verts <- data_verts[,-31]
+      
 
     # Write the file, so it can be loaded more easily 
         write.csv(data_verts, "./data/data_verts.csv", row.names=FALSE)
@@ -38,6 +38,8 @@
       data_verts$t_magnitude <- ordered(data_verts$t_magnitude, 
                                   levels = c("3", "5-7", "8-9", "10plus"))
   }
+  
+ 
 
  # Import TimeTree phylogeny
         tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
@@ -50,7 +52,7 @@
     data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data_verts$species_rotl)
     data_verts$species_rotl <- ifelse(data_verts$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data_verts$species_rotl)
     
-
+    
 # Have a look at the mean-variance relationship
   plot_func(data_verts, "sd_control", "mean_control")
 
