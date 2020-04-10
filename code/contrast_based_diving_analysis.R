@@ -53,24 +53,24 @@
     
     
 # Have a look at the mean-variance relationship
-  plot_func(data_verts, "sd_control", "mean_control")
+  plot_func(data_verts, "sd_t1", "mean_t1")
 
 # Calculating effect sizes, measure="ROM" means lnRR es, append=true means will add es to data set. yi= es estimate, vi sampling variance.
-  data_verts_ROM <- escalc(m1i = mean_treatment, 
-                           m2i = mean_control, 
-                           n1i = n_treatment, 
-                           n2i = n_control, 
-                           sd1i = sd_treatment, 
-                           sd2i = sd_treatment, 
+  data_verts_ROM <- escalc(m1i = mean_t2, 
+                           m2i = mean_t1, 
+                           n1i = n_t2, 
+                           n2i = n_t1, 
+                           sd1i = sd_t2, 
+                           sd2i = sd_t1, 
                            append = TRUE, measure ="ROM", 
                            data = data_verts)
 
-  data_verts_CVR <- escalc(m1i = mean_treatment, 
-                           m2i = mean_control, 
-                           n1i = n_treatment, 
-                           n2i = n_control, 
-                           sd1i = sd_treatment, 
-                           sd2i = sd_treatment, 
+  data_verts_CVR <- escalc(m1i = mean_t2, 
+                           m2i = mean_t1, 
+                           n1i = n_t2, 
+                           n2i = n_t1, 
+                           sd1i = sd_t2, 
+                           sd2i = sd_t1, 
                            append = TRUE, measure ="CVR", 
                            data = data_verts)
 
@@ -331,17 +331,19 @@
 ## Figure 1 mean and variance
 
   # Temperature moderator
-  model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"))
+  model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
   print(model4.RR_table_results)
+
+  model1.RR <- mod_results_new(model1.RR, mod_cat = "Int")
 
   spp <- data_verts_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
 
-  model4.RR_table_results$mod_table <-arrange(model4.RR_table_results$mod_table, 
-                                                name)
+# Interesting issues here that none of us anticipated when making orchaRd and that is with respect to ordered factors. Things can get re-arranged in tables when order is not maintained. So, need to watch this. Fixed here, but colours are off. Just edit in Adobe
+
 
   p1_RR_mod1 <- 
   p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
-  annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE)
+  annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
 
   
 
