@@ -9,13 +9,13 @@
   source("./code/func.R")
 
 #data processing
-  rerun_data = TRUE
+  rerun_data = FALSE
   if(rerun_data == TRUE){
 
     # Bring in the data and convert key variables to required classes. 
                   data <- read.csv("./data/lab_dive_durations_contrast.csv", stringsAsFactors = FALSE)
       data$body_mass_g <- as.numeric(data$body_mass_g)
-      data$t_magnitude <- ordered(data$t_magnitude, levels = c("3", "5-7", "8-9", "10plus"))
+      data$t_magnitude <- ordered(data$t_magnitude, levels = c("plus3", "plus5-7", "plus8-9", "plus10"))
          data$study_ID <- as.factor(data$study_ID)
     
     # Separate verts from inverts
@@ -35,7 +35,7 @@
   }else {
                   data_verts <- read.csv("./data/data_verts.csv", stringsAsFactors=FALSE)
       data_verts$t_magnitude <- ordered(data_verts$t_magnitude, 
-                                  levels = c("3", "5-7", "8-9", "10plus"))
+                                  levels = c("plus3", "plus5-7", "plus8-9", "plus10"))
   }
   
  
@@ -116,9 +116,11 @@
                    data = data_verts_ROM)
   summary(model1.RR)
 
+  I2(model1.RR, v = data_verts_ROM$vi, phylo = "species_rotl")
+
 # Model with moderators
   model2.RR <- rma.mv(yi = yi, V = V, 
-                   mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
+                   mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t",
                    data = data_verts_ROM)
@@ -224,10 +226,11 @@
                    data = data_verts_CVR)
   summary(model6.CVR)
 
+I2(model6.CVR, v = data_verts_CVR$vi, phylo = "species_rotl")
 
 #Model with moderators
   model7.CVR <- rma.mv(yi = yi, V = V2, 
-                   mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
+                   mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
@@ -331,27 +334,56 @@
 ## Figure 1 mean and variance
 
   # Temperature moderator
+  model1.RR_table_results <- mod_results(model1.RR, mod = "Int")
+  print(model1.RR_table_results)
   model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
   print(model4.RR_table_results)
 
-  model1.RR <- mod_results_new(model1.RR, mod_cat = "Int")
+  model6.CVR_table_results <- mod_results(model6.CVR, mod = "Int")
+  print(model6.CVR_table_results)
+  model9.CVR_table_results <- mod_results_new(model9.CVR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
+  print(model9.CVR_table_results)
 
   spp <- data_verts_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
 
 # Interesting issues here that none of us anticipated when making orchaRd and that is with respect to ordered factors. Things can get re-arranged in tables when order is not maintained. So, need to watch this. Fixed here, but colours are off. Just edit in Adobe
 
-
-  p1_RR_mod1 <- 
+sppTotal <- length(unique(data_verts_ROM$species_rotl))
+  p1_RR_mod1 <- orchard_plot(model1.RR_table_results, mod = "Int", xlab = "log Response Ratio (lnRR)", angle=45) + 
+  annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
   p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
   annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
 
+  p1_CVR_mod6 <- orchard_plot(model6.CVR_table_results, mod = "Int", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+  annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
+  p1_CVR_mod9 <- orchard_plot(model9.CVR_table_results, mod = "t_magnitude", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+  annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
+
+# Figure should be 75% there. Just do some modifications in Adobe.
+  pdf(width = 12, height = 11, file = "./preliminary_figures/Fig1.pdf", useDingbats = FALSE)
+    (p1_RR_mod1 / p1_RR_mod4) | (p1_CVR_mod6 / p1_CVR_mod9)
+  dev.off()
+
+################################
+  ## Figure 2
+################################
+model2.RR
+  model7.CVR
+
+  model2.RR_table_results <- mod_results_new(model2.RR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
+  print(model2.RR_table_results)
   
+  model7.CVR_table_results <- mod_results_new(model7.CVR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
+  print(model7.CVR_table_results)
 
-  orchard_plot(table_results, mod = "order", xlab = "Order", angle=45) + 
-  annotate(geom = "text", label = paste0("n = ",as.character(study$n)), x= 1, y = c(1:4)+0.3)
+  spp <- data_verts_ROM %>% group_by(respiration_mode) %>% summarise(n = length(unique(species_rotl)))
 
-str(model5_RR)
+  p1_RR_mod2 <- orchard_plot(model2.RR_table_results, mod = "respiration_mode", xlab = "log Response Ratio (lnRR)", angle=45) + 
+  annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE) 
 
-extract = function(model){
-table = data.frame(est = model$ beta, ci.lb = model$ ci.lb, ci.ub =model$ ci.ub)
-return(table)
+  p1_CVR_mod7 <- orchard_plot(model7.CVR_table_results, mod = "respiration_mode", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+  annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE)
+
+pdf(width = 9.480176,  height = 4.546255, "./preliminary_figures/Fig2.pdf", useDingbats = FALSE)
+  p1_RR_mod2 | p1_CVR_mod7
+dev.off()
