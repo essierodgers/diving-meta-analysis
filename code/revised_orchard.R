@@ -65,7 +65,7 @@ get_data_cont <- function(model, mod_cat){
        
      pos <- str_which(row.names(model$beta), {{mod_cat}}, negate = FALSE)
 	    names <- row.names(model$beta)[pos]
-	    name_cat <- as.character(stringr::str_replace(name_cat, {{mod_cat}}, ""))
+	    name_cat <- as.character(stringr::str_replace(names, {{mod_cat}}, ""))
 
 	    X <- as.data.frame(model$X)[,names]
 
