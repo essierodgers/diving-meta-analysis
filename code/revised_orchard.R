@@ -1,5 +1,7 @@
 
-
+#model=model4.RR
+#mod_cat = "t_magnitude"
+#mod_cont="mean_t"
 # Get prediction intervals for a single categorical variable when controlling for continuous variables in a model.
 get_pred_est_cont <- function (model, mod_cat, mod_cont) {
 
@@ -8,12 +10,17 @@ get_pred_est_cont <- function (model, mod_cat, mod_cont) {
 	    name_cat <- row.names(model$beta)[pos]
 	    name_cat <- as.character(stringr::str_replace(name_cat, {{mod_cat}}, ""))
 	  name_clean <- firstup(name_cat)
-	         len <- length(name)
+	         len <- length(name_clean)
 
 	# Continuous moderators
 		  len_cont <- length(mod_cont)
-		means_cont <- colMeans(model$X[,mod_cont])
-
+		  if(len_cont == 1){
+		  	means_cont <- mean(model$X[,mod_cont])
+		  	names(means_cont) <- mod_cont
+		  }
+		  if(len_cont > 1){
+			means_cont <- colMeans(model$X[,mod_cont])
+		  }
 	# Get prediction intervals
 		newdata <- matrix(0, ncol = len+len_cont, nrow = len)
 		diag(newdata[c(1:len),c(1:len)]) <- 1
@@ -37,17 +44,20 @@ get_pred_est_cont <- function (model, mod_cat, mod_cont) {
 	  return(table)
 }
 
+get_pred_est_cont(model, mod_cat, mod_cont)
 
 get_data_cont <- function(model, mod_cat){
-       X <- as.data.frame(model$X)
+       
      pos <- str_which(row.names(model$beta), {{mod_cat}}, negate = FALSE)
-	    name_cat <- row.names(model$beta)[pos]
+	    names <- row.names(model$beta)[pos]
 	    name_cat <- as.character(stringr::str_replace(name_cat, {{mod_cat}}, ""))
+
+	    X <- as.data.frame(model$X)[,names]
 
   moderator <- matrix(ncol = 1, nrow = dim(X)[1])
 
   for(i in 1:ncol(X)){
-      moderator <- ifelse(X[,i] == 1, names[i], moderator)
+      moderator <- ifelse(X[,i] == 1, name_cat[i], moderator)
   }
     moderator <- firstup(moderator)
     yi <- model$yi
@@ -59,7 +69,7 @@ get_data_cont <- function(model, mod_cat){
 
 }
 
-mod_results <- function(model, mod_cat, mod_cont) { 
+mod_results_new <- function(model, mod_cat, mod_cont) { 
 
 	if(all(class(model) %in% c("rma.mv", "rma")) == FALSE) {stop("Sorry, you need to fit a metafor model of class rma.mv or rma")}
 

@@ -298,7 +298,7 @@
   
   #Order effect sizes
       model10.CVR <- rma.mv(yi = yi, V = V2, 
-                   mods = ~ mean_t + t_magnitude + order-1, 
+                   mods = ~ mean_t + delta_t + order-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
@@ -310,7 +310,7 @@
       
       #rerun model without outlier
       model10.CVR.nooutlier <- rma.mv(yi = yi, V = V2_no_outlier, 
-                            mods = ~ mean_t + t_magnitude + order-1, 
+                            mods = ~ mean_t + delta_t + order-1, 
                             random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                             R = list(species_rotl = PhyloA), test = "t", 
                             data = data_verts_CVR_outlier_removed)
@@ -324,15 +324,26 @@
 
   devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
   library(orchaRd)
+  library(patchwork)
   source("./code/revised_orchard.R")
 
-  table_results <- mod_results(model5_RR, mod_cat = "order", mod_cont=c("scale(mean_t)", "scale(delta_t)"))
-  print(table_results)
 
-  orchard_plot(table_results, mod = "order", xlab = "Order", angle=45) + 
-  annotate(geom = "text", label = paste0("n = ",as.character(study$n)), x= 1, y = c(1:4)+0.3)
+## Figure 1 mean and variance
 
-  study <- data_verts_CVR %>% group_by(order) %>% summarise(n = length(unique(study_ID)))
+  # Temperature moderator
+  model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"))
+  print(model4.RR_table_results)
+
+  spp <- data_verts_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
+
+  model4.RR_table_results$mod_table <-arrange(model4.RR_table_results$mod_table, 
+                                                name)
+
+  p1_RR_mod1 <- 
+  p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
+  annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE)
+
+  
 
   orchard_plot(table_results, mod = "order", xlab = "Order", angle=45) + 
   annotate(geom = "text", label = paste0("n = ",as.character(study$n)), x= 1, y = c(1:4)+0.3)
