@@ -9,7 +9,7 @@
   source("./code/func.R")
 
 #data processing
-  rerun_data = FALSE
+  rerun_data = TRUE
   if(rerun_data == TRUE){
 
     # Bring in the data and convert key variables to required classes. 
