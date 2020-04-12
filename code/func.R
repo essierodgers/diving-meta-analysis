@@ -1,5 +1,15 @@
 
 #Functions
+# Sampling variance for mean
+m_sv <- function(mean, sd, n){
+  #page 148 Nakagawa et al 2015
+  (sd^2) / (n*(mean^2))
+}
+
+sd_sv <- function(n){
+  #page 148 Nakagawa et al 2015
+  (1/2)*(n-1)
+}
 
 ## Plots
 plot_func <- function(data, x, y){

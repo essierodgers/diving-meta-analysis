@@ -151,9 +151,9 @@
     hist(residuals(model2.RR.nooutlier))
     
     
-# Effect sizes for bimodal versus aerial breathers
+# Effect sizes for bimodal versus aerial breathers. Note here that you can fit the model with and without the intercept. Both results presented.
   model3.RR <- rma.mv(yi = yi, V = V, 
-                   mods = ~ mean_t + delta_t + respiration_mode-1, 
+                   mods = ~ mean_t + delta_t + respiration_mode, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_ROM)
