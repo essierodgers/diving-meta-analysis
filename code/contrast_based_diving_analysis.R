@@ -136,12 +136,11 @@
 
   # Hmm. Odd. Somthing isn't right here. Need to check
 
-    # Eggers regression
-            w <- 1 / data_verts_ROM$vi # Inverse sampling error
-         prec <- 1 / sqrt(data_verts_ROM$vi) # Inverse of SE's
-            W <- prec*res
+    # Eggers regression: Significant intercept for meta-analytic residuals suggest publication bias if all sources of heterogeneity are accounted for.
+            w <- 1 / data_verts_ROM$vi # weight= Inverse sampling error; precision is the inverse of standard errors or the sqrt(w)
+            o <- sqrt(w)*(res + data_verts_ROM$vi)
          
-         Egger <- lm(W ~ prec)
+         Egger <- lm(o ~ sqrt(w))
          summary(Egger)
 
   # Do some model checks
