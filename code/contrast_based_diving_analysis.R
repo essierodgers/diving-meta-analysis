@@ -129,6 +129,21 @@
 
   summary(model2.RR)
 
+  # Publication bias (Funnels):
+      res <- residuals(model2.RR)
+  #funnel(model2.RR, level = c(0.90, 0.95, 0.99), yaxis = "seinv")
+  funnel(res, vi = data_verts_ROM$vi, yaxis = "seinv")
+
+  # Hmm. Odd. Somthing isn't right here. Need to check
+
+    # Eggers regression
+            w <- 1 / data_verts_ROM$vi # Inverse sampling error
+         prec <- 1 / sqrt(data_verts_ROM$vi) # Inverse of SE's
+            W <- prec*res
+         
+         Egger <- lm(W ~ prec)
+         summary(Egger)
+
   # Do some model checks
     hist(residuals(model2.RR)) # outliers -3; maybe check this doesn't change anything.
     plot(residuals(model2.RR))
