@@ -229,6 +229,32 @@
   summary(model5.RR.nooutlier)
   hist(residuals(model5.RR.nooutlier))
   
+  
+  
+#Check for publication lag effect
+ 
+  plot(data_verts_ROM$year, data_verts_ROM$yi, xlab = "Publication Year", ylab = "log Response Ratio (lnRR)")
+
+     # Model with publication year
+  model2.RR.lag <- rma.mv(yi = yi, V = V, 
+                      mods = ~ year + mean_t + delta_t + log(body_mass_g) + respiration_mode, 
+                      random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                      R = list(species_rotl = PhyloA), test = "t",
+                      data = data_verts_ROM)
+  summary(model2.RR.lag)
+
+  
+  
+plot(data_verts_CVR$year, data_verts_CVR$yi, xlab = "Publication Year", ylab = "log Coeffient of Variation (lnCVR)")
+plot(data_verts_CVR$n_t1, data_verts_CVR$year, data = data_verts_CVR)
+  
+  model7.CVR.lag <- rma.mv(yi = yi, V = V2, 
+                       mods = ~ year + mean_t + delta_t + log(body_mass_g) + respiration_mode, 
+                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                       R = list(species_rotl = PhyloA), test = "t", 
+                       data = data_verts_CVR)
+    summary(model7.CVR.lag)
+  
 ###########################################
 #Variance models – CVR models
 ###########################################
@@ -244,7 +270,7 @@ I2(model6.CVR, v = data_verts_CVR$vi, phylo = "species_rotl")
 
 #Model with moderators
   model7.CVR <- rma.mv(yi = yi, V = V2, 
-                   mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode-1, 
+                   mods = ~ mean_t + delta_t + log(body_mass_g) + respiration_mode, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_CVR)
@@ -343,6 +369,7 @@ I2(model6.CVR, v = data_verts_CVR$vi, phylo = "species_rotl")
   library(orchaRd)
   library(patchwork)
   source("./code/revised_orchard.R")
+  find_rtools()
 
 
 ## Figure 1 mean and variance
