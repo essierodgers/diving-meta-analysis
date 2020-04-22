@@ -297,6 +297,23 @@ I2(model6.CVR, v = data_verts_CVR$vi, phylo = "species_rotl")
                            data = data_verts_CVR_outlier_removed)
       summary(model7.CVR.nooutlier)
       hist(residuals(model7.CVR.nooutlier))
+      
+      
+      
+      
+      # Publication bias (Funnels):
+      res <- residuals(model7.CVR)
+      #funnel(model2.RR, level = c(0.90, 0.95, 0.99), yaxis = "seinv")
+      funnel(res, vi = data_verts_CVR$vi, yaxis = "seinv")
+      
+     
+      
+      # Eggers regression: Significant intercept for meta-analytic residuals suggest publication bias if all sources of heterogeneity are accounted for.
+      w <- 1 / data_verts_CVR$vi # weight= Inverse sampling error; precision is the inverse of standard errors or the sqrt(w)
+      o <- sqrt(w)*(res + data_verts_CVR$vi)
+      
+      Egger <- lm(o ~ sqrt(w))
+      summary(Egger)  
   
   model8.CVR <- rma.mv(yi = yi, V = V2, 
                    mods = ~ mean_t + delta_t + respiration_mode-1, 
