@@ -4,7 +4,7 @@ pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 source("./code/func.R")
 
 #Data processing
-rerun = TRUE
+rerun = FALSE
 
 if(rerun == TRUE){
   
@@ -89,7 +89,7 @@ prior_slope <- list(R = list(V = 1, nu = 0.001),
 	###########################################	
 	
 	    model1.mean <- MCMCglmm(
-                  log(mean) ~  T_w + log(body_mass_g) + respiration_mode, 
+                  log(mean) ~  T_w + log(body_mass_g) + respiration_mode*T_w, 
 	                mev = data2$mean_sv, 
                   random = ~us(1):study_ID + us(1 + T_w):species_rotl, 
 	                ginverse = list(species_rotl = A), 
@@ -103,7 +103,7 @@ prior_slope <- list(R = list(V = 1, nu = 0.001),
           T_w <- model1.mean$Sol[,"T_w"]
           mean(T_w)
           HPDinterval(T_w)
-          ((1-(exp(mean(T_w))))*7)*100
+          ((1-(exp(mean(T_w))))*7.4)*100
 
           
 

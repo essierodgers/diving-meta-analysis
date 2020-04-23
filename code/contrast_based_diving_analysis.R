@@ -131,10 +131,8 @@
 
   # Publication bias (Funnels):
       res <- residuals(model2.RR)
-  #funnel(model2.RR, level = c(0.90, 0.95, 0.99), yaxis = "seinv")
   funnel(res, vi = data_verts_ROM$vi, yaxis = "seinv")
 
-  # Hmm. Odd. Somthing isn't right here. Need to check
 
     # Eggers regression: Significant intercept for meta-analytic residuals suggest publication bias if all sources of heterogeneity are accounted for.
             w <- 1 / data_verts_ROM$vi # weight= Inverse sampling error; precision is the inverse of standard errors or the sqrt(w)
@@ -167,7 +165,7 @@
     
 # Effect sizes for bimodal versus aerial breathers. Note here that you can fit the model with and without the intercept. Both results presented.
   model3.RR <- rma.mv(yi = yi, V = V, 
-                   mods = ~ mean_t + delta_t + respiration_mode, 
+                   mods = ~ mean_t + delta_t + respiration_mode-1, 
                    random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                    R = list(species_rotl = PhyloA), test = "t", 
                    data = data_verts_ROM)
@@ -381,8 +379,6 @@ sppTotal <- length(unique(data_verts_ROM$species_rotl))
 ################################
   ## Figure 2
 ################################
-model2.RR
-  model7.CVR
 
   model2.RR_table_results <- mod_results_new(model2.RR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
   print(model2.RR_table_results)
