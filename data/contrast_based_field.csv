@@ -1,0 +1,25 @@
+study_ID,study_name,year,species,order,life_stage,animal_source,sex,field_site,body_mass_kg,respiration_mode,replication_level,t1,t2,mean_t,delta_t,t_magnitude,mean_t1,sd_t1,n_t1,se_t1,mean_t2,sd_t2,n_t2,se_t2,shared_control,Q10,tag-type,source,mean_conversion
+14,Campbell_etal_2010,2010,Crocodylus johnstoni,Crocodilia,adult,wild,NA,"Lakefield National Park, Queensland, Australia (15.1558408 S, 144.2519928 E)",7.3,aerial,individual,23.9,29.1,26.5,5.2,plus5-7,26.6,22.25,9,NA,18.45,14.09,6,NA,1,0.494824747,time-depth-temperature recorder,table2,y_Hozo_etal_2005
+2,Arendt_etal_2012,2012,Caretta caretta,Testudines,adult,wild,male,"Port Canaveral, USA; 28ø23'N, ­80ø32'W",102.7325,aerial,individual,22.7,25.55,24.125,2.85,plus3,,,4,,,,4,,1,#DIV/0!,satellite transmitter,"DD: Figure5, group 2, reproductively inactive residents; Tw: Figure 6",y_Hozo_etal_2005
+5,Ballorain_etal_2013,2013,Chelonia mydas,Testudines,adult,wild,NA,"Mayotte, South Western Indian Ocean",110.5,aerial,individual,25.7,29.3,27.5,3.6,plus3,15.7,3.111269837,8,1.1,9.5,1.802775638,13,0.5,1,0.247716779,time-depth-temperature recorder,Table1,n
+35,Enstipp_etal_2016,2016,Chelonia mydas,Testudines,adult,wild,mixed,"Mayotte Island, Comoros Archipelago, south-western Indian Ocean, 12ø 580 S, 45ø 050 E; ",109.4,aerial,individual,25.7,28.9,27.3,3.2,plus3,8.6,1.2,5,NA,5.9,0.8,7,NA,1,0.308038412,accelerometer,DD: Table 1: Tw: Table 2,n
+36,Fielder_2012,2012,Myuchelys bellii,Testudines,adult,wild,mixed,"Bald Rock Creek in Girraween National Park, eastern Australia (28ø49'60''S 151ø55'60''E)",1.154,bimodal,individual,7.1,21.9,14.5,14.8,plus>10,1891,705.6925676,2,499,12.4,8.6,4,4.3,1,0.033482484,time-depth-temperature recorder,DD: In text pg. 132; Tw: Table 2,n
+57,Hatase_etal_2007,2007,Caretta caretta,Testudines,adult,wild,female,"Yakushima Island, Japan (30124'N, 130125'E)",82,aerial,individual,22,26,24,4,plus3,43.62,9.588367953,2,NA,18.74,7.127636354,2,NA,1,0.120978951,satellite transmitter,Figure5a-b,n
+62,Hazel_etal_2009,2009,Chelonia mydas,Testudines,juvenile and adult,wild,mixed,"Moreton Bay, QLD, Australia",110.5,aerial,individual,17,23,20,6,plus5-7,72.5075,38.3120898,4,NA,18.508,9.388123881,5,NA,1,0.102713517,time-depth recorder,"Fig.3A (night dives, Turtle IDs: T06,T08,T07,T05,T15,T14,T16,T28). Body mass data from Ballorain_etal_2013",n
+75,Kinoshita_etal_2018,2018,Caretta caretta,Testudines,juvenile,wild,NA,"Otsuchi Bay, Iwate, Japan (39ø21?05?N, 141ø56?04?E)",62.3,aerial,individual,19.3,22,20.65,2.7,plus3,23.5,28.7,12,NA,17.8,20.5,12,NA,1,0.357401256,satellite transmitter,In text pg. 5,n
+86,Narazaki_etal_2015,2015,Caretta caretta,Testudines,juvenile,wild,NA,"Otsuchi Bay, Iwate, Japan (39ø20?30N, 141ø56?00E)",55.5,aerial,individual,19.3,22,20.65,2.7,plus3,12.63,5.06,6,NA,12.56,2.89,6,NA,1,0.979626059,satellite transmitter,,y_Luo et al. (2018)
+95,Renaud&Carptenter_1994,1994,Caretta caretta,Testudines,adult,wild,NA,Gulf of Mexico,29.7,aerial,individual,18.5,32,25.25,13.5,plus>10,50,26.6985,2,NA,6,4.243,2,NA,1,0.207927549,satellite transmitter,"Table4; daytime dive durations: IDs: L2 and L4, only turtles with comparable water temps; winter vs summer",n
+95,Renaud&Carptenter_1994,1994,Caretta caretta,Testudines,adult,wild,NA,Gulf of Mexico,29.7,aerial,individual,18.5,32,25.25,13.5,plus>10,144.5,91.21677477,2,NA,15.5,14.8492424,2,NA,1,0.191348506,satellite transmitter,"Table4; nighttime dive durations: IDs: L2 and L4, only turtles with comparable water temps; winter vs summer",n
+108,Seebacher_etal_2004,2004,Crocodylus johnstoni ,Crocodilia,adult,wild,NA,"Lakefield National Park, Queensland, Australia",9.88,aerial,individual,,,,0,,,,5,,,,5,,,#DIV/0!,"time-depth recorder, temperature-sensitive radio transmitters",figure5,n
+113,Southwood_etal_2003,2003,Chelonia mydas,Testudines,juveniles,wild,NA,"Heron Island, Australia",16.5,aerial,individual,21.3,26.2,23.75,4.9,plus>5-7,24.3,2.2627417,2,1.6,13.1,1.322875656,7,0.5,1,0.283385481,"time-depth-temperature recorders, VHF-radio tags",table1,n
+115,Storch_etal_2005,2005,Eretmochelys imbricata,Testudines,adult,wild,female,"Buck Island Reef National Monument (64ø37?W, 17ø 47? N), USA",76.66666667,aerial,individual,26.1,29.2,27.65,3.1,plus3,35.34333333,6.817964017,3,NA,33.29333333,6.695344153,3,NA,1,0.824687834,time-depth recorders,"fig.1, data extracted for warmest and coolest period in 2000- daytime dive durations QQD048, 132, 280",n
+115,Storch_etal_2005,2005,Eretmochelys imbricata,Testudines,adult,wild,female,"Buck Island Reef National Monument (64ø37?W, 17ø 47? N), Virgin Islands, USA",76.66666667,aerial,individual,26.1,29.2,27.65,3.1,plus3,54.11,8.806151259,3,NA,52.43,9.137455882,3,NA,2,0.903262432,time-depth recorders,"fig.1, data extracted for warmest and coolest period in 2000- nighttime dive durations QQD048, 132, 280",n
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
