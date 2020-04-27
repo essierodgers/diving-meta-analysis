@@ -1,0 +1,47 @@
+,filename,variable,group_id,mean,sd,n,se,error_type,plot_type
+1,003_Aubret_etal_2015_fig1.JPG,dive duration (min),10C,57.27272727,34.54246399,231,2.272727273,se,mean_error
+2,003_Aubret_etal_2015_fig1.JPG,dive duration (min),20C,11.13636364,13.81698559,231,0.909090909,se,mean_error
+3,003_Aubret_etal_2015_fig1.JPG,dive duration (min),30C,3.636363636,10.3627392,231,0.681818182,se,mean_error
+4,011_Bruton_etal_2012_fig1a_max.JPG,dive duration,24ac-24test,65.83333333,9.428090416,8,3.333333333,se,mean_error
+5,011_Bruton_etal_2012_fig1a_max.JPG,dive duration,24ac-32test,31.33333333,7.071067812,8,2.5,se,mean_error
+6,011_Bruton_etal_2012_fig1a_max.JPG,dive duration,32ac-24test,74.66666667,10,9,3.333333333,se,mean_error
+7,011_Bruton_etal_2012_fig1a_max.JPG,dive duration,32ac-32test,37,8,9,2.666666667,se,mean_error
+8,011_Bruton_etal_2012_fig1b_mean.JPG,actual mean dive duration,24ac-24test,50.17857143,8.081220356,8,2.857142857,se,mean_error
+9,011_Bruton_etal_2012_fig1b_mean.JPG,actual mean dive duration,24ac-32test,26.96428571,5.555838995,8,1.964285714,se,mean_error
+10,011_Bruton_etal_2012_fig1b_mean.JPG,actual mean dive duration,32ac-24test,56.60714286,10.17857143,9,3.392857143,se,mean_error
+11,011_Bruton_etal_2012_fig1b_mean.JPG,actual mean dive duration,32ac-32test,32.32142857,6.964285714,9,2.321428571,se,mean_error
+12,092_Pratt&Franklin_2010_Fig1.JPG,dive duration,20C,53.84615385,7.653749516,11,2.307692308,se,mean_error
+13,092_Pratt&Franklin_2010_Fig1.JPG,dive duration,26C,43.07692308,8.291561976,11,2.5,se,mean_error
+14,092_Pratt&Franklin_2010_Fig1.JPG,dive duration,32,19.61538462,7.015937057,11,2.115384615,se,mean_error
+15,092_Priest&Franklin_2002_Fig1.JPG,dive duration,R.leukops 15C normoxia,98.94736842,55.43582049,6,22.63157895,se,mean_error
+16,092_Priest&Franklin_2002_Fig1.JPG,dive duration,R.luekops 23C normoxia,35.78947368,19.33807692,6,7.894736842,se,mean_error
+17,092_Priest&Franklin_2002_Fig1.JPG,dive duration,R.leukops 30C normoxia,15.26315789,11.60284615,6,4.736842105,se,mean_error
+18,101_Rodgers_etal_2015_fig1.JPG,dive duration,28ac-28test,6.666666667,4.614434491,11,1.391304348,se,mean_error
+19,101_Rodgers_etal_2015_fig1.JPG,dive duration,28ac-31.5test,4,0.672938363,11,0.202898551,se,mean_error
+20,101_Rodgers_etal_2015_fig1.JPG,dive duration,28ac-35test,2.463768116,0.672938363,11,0.202898551,se,mean_error
+21,101_Rodgers_etal_2015_fig1.JPG,dive duration,31.5ac-28test,8.202898551,1.826546986,11,0.550724638,se,mean_error
+22,101_Rodgers_etal_2015_fig1.JPG,dive duration,31.5ac-31.5test,4.637681159,3.653093972,11,1.101449275,se,mean_error
+23,101_Rodgers_etal_2015_fig1.JPG,dive duration,31.5ac-35test,2.173913043,0.672938363,11,0.202898551,se,mean_error
+24,101_Rodgers_etal_2015_fig1.JPG,dive duration,35ac-28test,7.768115942,4.710568543,11,1.420289855,se,mean_error
+25,101_Rodgers_etal_2015_fig1.JPG,dive duration,35ac-31.5test,4.608695652,2.787887505,11,0.84057971,se,mean_error
+26,101_Rodgers_etal_2015_fig1.JPG,dive duration,35ac-35test,3.391304348,1.53814483,11,0.463768116,se,mean_error
+27,106_Samajova&Gvozdik_2009_fig1.JPG,dive duration (s),10C,330.7692308,117.2465162,12,33.84615385,se,mean_error
+28,106_Samajova&Gvozdik_2009_fig1.JPG,dive duration (s),15C,199.2307692,69.2820323,12,20,se,mean_error
+29,106_Samajova&Gvozdik_2009_fig1.JPG,dive duration (s),20C,126.1538462,31.9763226,12,9.230769231,se,mean_error
+30,106_Samajova&Gvozdik_2009_fig1.JPG,dive duration (s),25C,55.38461538,13.32346775,12,3.846153846,se,mean_error
+31,116_Storey_etal_2008_fig1.JPG,dive duration,20C 50cm depth,27.6,32.45454942,7,12.26666667,se,mean_error
+32,116_Storey_etal_2008_fig1.JPG,dive duration,25C 50cm depth,15.33333333,5.644269464,7,2.133333333,se,mean_error
+33,116_Storey_etal_2008_fig1.JPG,dive duration,30C 50cm depth,9.333333333,4.938735781,7,1.866666667,se,mean_error
+34,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. curtus 21C,39.78947368,16.05944635,11,4.842105263,se,mean_error
+35,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. curtus 24C,28.42105263,15.36120956,11,4.631578947,se,mean_error
+36,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. curtus 27C,15.78947368,4.887657586,11,1.473684211,se,mean_error
+37,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. curtus 30C,11.15789474,3.49118399,11,1.052631579,se,mean_error
+38,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. elegans 21C,27.36842105,13.31485331,10,4.210526316,se,mean_error
+39,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. elegans 24C,21.68421053,9.986139979,10,3.157894737,se,mean_error
+40,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. elegans 27C,14.10526316,4.660198657,10,1.473684211,se,mean_error
+41,119_Udyawer_etal_2016_fig1.JPG,dive duration,H. elegans 30C,10.94736842,1.997227996,10,0.631578947,se,mean_error
+42,120_Uriona_etal_2009_fig1.JPG,dive duration,22C control fasted,5.227272727,0.561219975,7,0.212121212,se,mean_error
+43,120_Uriona_etal_2009_fig1.JPG,dive duration,28C control fasted,2.651515152,0.280609988,7,0.106060606,se,mean_error
+44,092_Priest&Franklin_2002_Fig3_R. macquarii.JPG,dive duration,E. macquarii 15C normoxia,32.55813953,16.64050588,5,7.441860465,se,mean_error
+45,092_Priest&Franklin_2002_Fig3_R. macquarii.JPG,dive duration,E. macquarii 23C normoxia,4.88372093,2.600079044,5,1.162790698,se,mean_error
+46,092_Priest&Franklin_2002_Fig3_R. macquarii.JPG,dive duration,E. macquarii 30C normoxia,6.511627907,3.640110661,5,1.627906977,se,mean_error
