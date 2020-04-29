@@ -19,7 +19,7 @@ rerun_data = FALSE
 if(rerun_data == TRUE){
   
   # Bring in the data and convert key variables to required classes. 
-  data <- read.csv("./data/contrast_full_dataset.csv", stringsAsFactors = FALSE)
+  data <- read.csv("./data/finalised_data_sets/contrast_full_dataset.csv", stringsAsFactors = FALSE)
   data$body_mass <- as.numeric(data$body_mass)
   data$t_magnitude <- ordered(data$t_magnitude, levels = c("plus3", "plus5-7", "plus8-9", "plus10"))
   data$study_ID <- as.factor(data$study_ID)
@@ -58,11 +58,7 @@ PhyloA <- vcv(tree, corr = TRUE)
 
 #Tree checks_full dataset
   setdiff(unique(data_full$species_rotl), sort(rownames(PhyloA)))
-  # Fix what is different in data
-  data_full$species_rotl <- ifelse(data_full$species_rotl == "Trachemys_dorbigni_Trachemys_dorbigni", "Trachemys_dorbigni", data_full$species_rotl)
-  data_full$species_rotl <- ifelse(data_full$species_rotl == "Crocodylus_johnstoni", "Crocodylus_johnsoni", data_full$species_rotl)
-
-  # Check same number of levels
+   # Check same number of levels
   length(rownames(PhyloA))
   length(unique(data_full$species_rotl))
  
@@ -137,7 +133,7 @@ data_full_CVR$obs <- 1:dim(data_full_CVR)[1]
   
   # Model with moderators
   model2.RR <- rma.mv(yi = yi, V = V, 
-                      mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode-1 + study_type, 
+                      mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode + study_type, 
                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                       R = list(species_rotl = PhyloA), test = "t",
                       data = data_full_ROM)
@@ -174,7 +170,7 @@ data_full_CVR$obs <- 1:dim(data_full_CVR)[1]
   wt.sd(data_full_ROM$delta_t, data_full_ROM$n_t1, na.rm = TRUE)
   
   model3.RR <- rma.mv(yi = yi, V = V, 
-                      mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode-1, 
+                      mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode, 
                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                       R = list(species_rotl = PhyloA), test = "t", 
                       data = data_full_ROM)
@@ -233,7 +229,7 @@ data_full_CVR$obs <- 1:dim(data_full_CVR)[1]
   
   #Model with moderators
   model6.CVR <- rma.mv(yi = yi, V = V2, 
-                       mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode, 
+                       mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode + study_type, 
                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                        R = list(species_rotl = PhyloA), test = "t", 
                        data = data_full_CVR)
