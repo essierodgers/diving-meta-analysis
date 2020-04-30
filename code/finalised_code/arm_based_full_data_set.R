@@ -102,7 +102,7 @@ if(rerun == TRUE){
   ###########################################	
   
   model1.mean <- MCMCglmm(
-    log(mean) ~  T_w + log(body_mass_g) + respiration_mode * T_w, 
+    log(mean) ~  T_w + log(body_mass_g) + respiration_mode, 
     mev = data2$mean_sv, 
     random = ~us(1):study_ID + us(1 + T_w):species_rotl, 
     ginverse = list(species_rotl = A), 
