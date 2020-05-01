@@ -14,6 +14,7 @@ library(tibble)
 library(stringr)
 library(forcats)
 
+
 #data processing
 rerun_data = FALSE
 if(rerun_data == TRUE){
@@ -275,4 +276,74 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
   
   # Do some model checks
   hist(residuals(model8.CVR))
+  
+  
+  
+  
+  
+  ###################################
+  ## Figures
+  ##################################
+  
+  devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
+  library(orchaRd)
+  library(patchwork)
+  source("./code/revised_orchard.R")
+  find_rtools()
+  
+  
+  ## Figure 1 mean and variance
+  
+  # Temperature moderator
+  model1.RR_table_results <- mod_results(model1.RR, mod = "Int")
+  print(model1.RR_table_results)
+  model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
+  print(model4.RR_table_results)
+  
+  model5.CVR_table_results <- mod_results(model5.CVR, mod = "Int")
+  print(model5.CVR_table_results)
+  model8.CVR_table_results <- mod_results_new(model8.CVR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
+  print(model8.CVR_table_results)
+  
+  spp <- data_verts_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
+  
+  # Interesting issues here that none of us anticipated when making orchaRd and that is with respect to ordered factors. Things can get re-arranged in tables when order is not maintained. So, need to watch this. Fixed here, but colours are off. Just edit in Adobe
+  
+  sppTotal <- length(unique(data_verts_ROM$species_rotl))
+  p1_RR_mod1 <- orchard_plot(model1.RR_table_results, mod = "Int", xlab = "log Response Ratio (lnRR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
+  p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
+  
+  p1_CVR_mod5 <- orchard_plot(model5.CVR_table_results, mod = "Int", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
+  p1_CVR_mod8 <- orchard_plot(model8.CVR_table_results, mod = "t_magnitude", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
+  
+  # Figure should be 75% there. Just do some modifications in Adobe.
+  pdf(width = 12, height = 11, file = "./preliminary_figures/Fig1.pdf", useDingbats = FALSE)
+  (p1_RR_mod1 / p1_RR_mod4) | (p1_CVR_mod5 / p1_CVR_mod8)
+  dev.off()
+  
+  ################################
+  ## Figure 2
+  ################################
+  
+  model2.RR_table_results <- mod_results_new(model2.RR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
+  print(model2.RR_table_results)
+  
+  model6.CVR_table_results <- mod_results_new(model6.CVR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
+  print(model6.CVR_table_results)
+  
+  spp <- data_verts_ROM %>% group_by(respiration_mode) %>% summarise(n = length(unique(species_rotl)))
+  
+  p1_RR_mod2 <- orchard_plot(model2.RR_table_results, mod = "respiration_mode", xlab = "log Response Ratio (lnRR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE) 
+  
+  p1_CVR_mod6 <- orchard_plot(model6.CVR_table_results, mod = "respiration_mode", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE)
+  
+  pdf(width = 9.480176,  height = 4.546255, "./preliminary_figures/Fig2.pdf", useDingbats = FALSE)
+  p1_RR_mod2 | p1_CVR_mod7
+  dev.off()
     

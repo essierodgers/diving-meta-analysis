@@ -104,15 +104,6 @@ V2 <- make_VCV_matrix(data_field_CVR, "vi", "sc_cluster", type = "vcv", rho = 0.
 corrplot(as.matrix(V2), is.corr = FALSE)
 write.csv(V2, file = "./output_matrices/sc_matrix_cvr_field.csv")
 
-#Calculing weighted means and SD for delta_t
-weighted.mean(data_field_ROM$ delta_t, data_field_ROM$ n_t1)
-weightedSD(data_field_ROM$delta_t, data_field_ROM$n_t1)
-
-#Calculing weighted means and SD for body mass
-weighted.mean(data_field_ROM$ body_mass, data_field_ROM$ n_t1)
-weightedSD(data_field_ROM$body_mass, data_field_ROM$n_t1)
-
-
 
 ###########################################
 #Mean models - RR models
@@ -226,4 +217,12 @@ model4.CVR.outlier_removed_pubbias <- rma.mv(yi = yi, V = V_no_outlier_CVR,
                                             R = list(species_rotl = PhyloA2), test = "t",
                                             data = data_field_CVR_outlier_removed)
 summary(model4.CVR.outlier_removed_pubbias)
+
+#Calculing weighted means and SD for delta_t- outliers removed
+weighted.mean(data_field_ROM_outlier_removed$ delta_t, data_field_ROM_outlier_removed$ n_t1)
+weightedSD(data_field_ROM_outlier_removed$delta_t, data_field_ROM_outlier_removed$n_t1)
+
+#Calculing weighted means and SD for body mass- outliers removed
+weighted.mean(data_field_ROM_outlier_removed$ body_mass, data_field_ROM_outlier_removed$ n_t1)
+weightedSD(data_field_ROM_outlier_removed$body_mass, data_field_ROM_outlier_removed$n_t1)
 
