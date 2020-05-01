@@ -3,7 +3,6 @@ pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, ape)
 library(dplyr)
 library(tidyr)
 library(readr)
-library(purr)
 library(tibble)
 library(stringr)
 library(forcats)
@@ -18,10 +17,9 @@ rerun = FALSE
 if(rerun == TRUE){
   
   # Bring in the data and convert key variables to required classes. 
-  data <- read.csv("./data/finalised_data_sets/arm_based_full_dataset.csv", stringsAsFactors = FALSE)
+  data <- read.csv("./data/finalised_data_sets/armbased_lab_dataset.csv", stringsAsFactors = FALSE)
   data$body_mass_g <- as.numeric(data$body_mass_g)
   data$study_ID <- as.factor(data$study_ID)
-  data$study_type <- as.factor(data$study_type)
   data$respiration_mode <- as.factor(data$respiration_mode)
  
   
@@ -53,7 +51,7 @@ if(rerun == TRUE){
 
 #Importing phylogeny from TimeTree
   # Import TimeTree phylogeny
-  tree <- read.tree("./data/full_phylogeny.NWK")
+  tree <- read.tree("./data/finalised_data_sets/phylo_lab.NWK")
   plot(tree)
   A <- inverseA(tree, nodes = "TIPS")$Ainv
 
@@ -61,6 +59,16 @@ if(rerun == TRUE){
   # Check what is different-- different number of species (16 compared to 13)
   setdiff(unique(data$species_rotl), sort(rownames(A)))
 
+  # Fix up the species names so they match with phylogeny
+  data$species_rotl <- paste0(data$genus, "_", data$species_new)
+  
+  # Fix what is different in data
+  data$species_rotl <- ifelse(data$species_rotl == "Chrysemys_dorbignyi", "Trachemys_dorbigni", data$species_rotl)
+  data$species_rotl <- ifelse(data$species_rotl == "Triturus_alpestris", "Ichthyosaura_alpestris", data$species_rotl)
+  
+  
+  
+  
   # Check same number of levels
   length(rownames(A))
   length(unique(data$species_rotl))
@@ -116,7 +124,7 @@ if(rerun == TRUE){
   T_w <- model1.mean$Sol[,"T_w"]
   mean(T_w)
   HPDinterval(T_w)
-  ((1-(exp(mean(T_w))))*7.4)*100
+  ((1-(exp(mean(T_w))))*1)*100
   
   
   ###########################################

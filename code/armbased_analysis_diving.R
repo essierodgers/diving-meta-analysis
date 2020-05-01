@@ -43,7 +43,7 @@ if(rerun == TRUE){
 
  
 #Importing phylogeny from TimeTree
-    tree <- read.tree("./data/order_data/vert_phylogeny.NWK")
+    tree <- read.tree("./data/finalised_data_sets/phylo_lab.NWK")
     plot(tree)
     A <- inverseA(tree, nodes = "TIPS")$Ainv
    
@@ -89,7 +89,7 @@ prior_slope <- list(R = list(V = 1, nu = 0.001),
 	###########################################	
 	
 	    model1.mean <- MCMCglmm(
-                  log(mean) ~  T_w + log(body_mass_g) + respiration_mode*T_w, 
+                  log(mean) ~  T_w + log(body_mass_g) + respiration_mode, 
 	                mev = data2$mean_sv, 
                   random = ~us(1):study_ID + us(1 + T_w):species_rotl, 
 	                ginverse = list(species_rotl = A), 
