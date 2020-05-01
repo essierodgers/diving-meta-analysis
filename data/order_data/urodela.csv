@@ -1,5 +1,0 @@
-study_ID,study_name,species,life_stage,animal_source,body_mass_g,respiration_mode,replication_level,dive_type,mean_or_max,acclimation_temp,T,mean,sd,n,se,shared_group,T_b,source
-106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,NA,aerial,individual,voluntary,mean,18,10,5.512820513,1.954108603,12,0.564102564,1,17.5,Fig2A
-106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,NA,aerial,individual,voluntary,mean,18,15,3.320512821,1.154700538,12,0.333333333,1,17.5,Fig2A
-106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,NA,aerial,individual,voluntary,mean,18,20,2.102564103,0.53293871,12,0.153846154,1,17.5,Fig2A
-106,106_Samajova&Gvozdik_2009,Triturus alpestris,adult,wild,NA,aerial,individual,voluntary,mean,18,25,0.923076923,0.222057796,12,0.064102564,1,17.5,Fig2A
