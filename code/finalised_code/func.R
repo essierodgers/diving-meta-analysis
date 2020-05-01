@@ -89,3 +89,10 @@ tree_checks <- function(data, tree, dataCol, type = c("checks", "prune")){
     return(ape::drop.tip(tree, species_list1))
   }
 }
+
+#calculating weighted standard deviations
+weightedSD <- function(sds, n){
+  var <- sds^2
+  wd_sd <- sqrt( sum(var*n) / sum(n))
+  return(wd_sd)
+}
