@@ -23,7 +23,7 @@ if(rerun_data == TRUE){
   data$body_mass <- as.numeric(data$body_mass)
   data$t_magnitude <- ordered(data$t_magnitude, levels = c("plus3", "plus5-7", "plus8-9", "plus10"))
   data$study_ID <- as.factor(data$study_ID)
-  data$study_type <- as.factor(data$study_type)
+ 
   
   # Separate genus and species
   genus <- as.data.frame(do.call("rbind", str_split(str_trim(data$species, side = "both"), " ")))
@@ -164,16 +164,7 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
                       data = data_lab_ROM)
   summary(model2.RR.pubbias)
   
-  
-  
-  # Eggers regression: Significant intercept for meta-analytic residuals suggest publication bias if all sources of heterogeneity are accounted for.
-  w <- 1 / data_full_ROM$vi # weight= Inverse sampling error; precision is the inverse of standard errors or the sqrt(w)
-  o <- sqrt(w)*(res + data_full_ROM$vi)
-  
-  Egger <- lm(o ~ sqrt(w))
-  summary(Egger)
-
-  
+ 
   # Do some model checks
   hist(residuals(model2.RR)) 
   plot(residuals(model2.RR))
@@ -245,6 +236,7 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
   #funnel(model2.RR, level = c(0.90, 0.95, 0.99), yaxis = "seinv")
   funnel(res, vi = data_lab_CVR$vi, yaxis = "seinv")
   
+  #Publication bias check- sampling variance (vi) included as a moderator
   model6.CVR.pubbias <- rma.mv(yi = yi, V = V2, 
                        mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode + vi, 
                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
@@ -253,13 +245,7 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
   summary(model6.CVR.pubbias)
   
   
-  # Eggers regression: Significant intercept for meta-analytic residuals suggest publication bias if all sources of heterogeneity are accounted for.
-  w <- 1 / data_full_CVR$vi # weight= Inverse sampling error; precision is the inverse of standard errors or the sqrt(w)
-  o <- sqrt(w)*(res + data_full_CVR$vi)
-  
-  Egger <- lm(o ~ sqrt(w))
-  summary(Egger)  
-  
+ 
   
   ##Effect of respiration mode on CVR
   model7.CVR <- rma.mv(yi = yi, V = V2, 
