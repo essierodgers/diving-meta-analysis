@@ -5,7 +5,7 @@ rm(list = ls())
 # Load libraries
 pacman::p_load(metafor, MCMCglmm, tidyverse, rotl, phytools, corrplot, devtools)
 install_github("daniel1noble/metaAidR"); library(metaAidR)
-source("./code/finalised_code/func.R")
+source("./code/func.R")
 library(dplyr)
 library(tidyr)
 library(readr)
@@ -20,7 +20,7 @@ rerun_data = FALSE
 if(rerun_data == TRUE){
   
   # Bring in the data and convert key variables to required classes. 
-  data <- read.csv("./data/finalised_data_sets/contrast_lab_dataset.csv", stringsAsFactors = FALSE)
+  data <- read.csv("./data/contrast_lab_dataset.csv", stringsAsFactors = FALSE)
   data$body_mass <- as.numeric(data$body_mass)
   data$t_magnitude <- ordered(data$t_magnitude, levels = c("plus3", "plus5-7", "plus8-9", "plus10"))
   data$study_ID <- as.factor(data$study_ID)
@@ -36,9 +36,9 @@ if(rerun_data == TRUE){
   
   
   # Write the file, so it can be loaded more easily 
-  write.csv(data, "./data/data_full.csv", row.names=FALSE)
+  write.csv(data, "./data/contrast_lab_dataset_processed.csv", row.names=FALSE)
 }else {
-  data_lab <- read.csv("./data/data_full.csv", stringsAsFactors=FALSE)
+  data_lab <- read.csv("./data/contrast_lab_dataset_processed.csv", stringsAsFactors=FALSE)
   data_lab$t_magnitude <- ordered(data_lab$t_magnitude, 
                                     levels = c("plus3", "plus5-7", "plus8-9", "plus10"))
 }
@@ -47,7 +47,7 @@ if(rerun_data == TRUE){
 
 
 # Import TimeTree phylogeny
-tree <- read.tree("./data/finalised_data_sets/phylo_lab.NWK")
+tree <- read.tree("./data/phylo_lab.NWK")
 plot(tree)
 
 
