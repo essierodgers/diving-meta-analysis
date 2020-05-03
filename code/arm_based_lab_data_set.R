@@ -17,7 +17,7 @@ rerun = FALSE
 if(rerun == TRUE){
   
   # Bring in the data and convert key variables to required classes. 
-  data <- read.csv("./data/finalised_data_sets/armbased_lab_dataset.csv", stringsAsFactors = FALSE)
+  data <- read.csv("./data/armbased_lab_dataset.csv", stringsAsFactors = FALSE)
   data$body_mass_g <- as.numeric(data$body_mass_g)
   data$study_ID <- as.factor(data$study_ID)
   data$respiration_mode <- as.factor(data$respiration_mode)
@@ -40,18 +40,18 @@ if(rerun == TRUE){
   data$obs <- 1:dim(data)[1]
   
   # Write the file, so it can be loaded more easily 
-  write.csv(data, "./data/data_arm.csv", row.names=FALSE)
+  write.csv(data, "./data/armbased_lab_dataset_processed.csv", row.names=FALSE)
   
 }else {
   
-  data <- read.csv("./data/data_arm.csv")
+  data <- read.csv("./data/armbased_lab_dataset_processed.csv")
   
 }
 
 
 #Importing phylogeny from TimeTree
   # Import TimeTree phylogeny
-  tree <- read.tree("./data/finalised_data_sets/phylo_lab.NWK")
+  tree <- read.tree("./data/phylo_lab.NWK")
   plot(tree)
   A <- inverseA(tree, nodes = "TIPS")$Ainv
 
