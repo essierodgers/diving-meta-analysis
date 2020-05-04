@@ -165,14 +165,11 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
                       data = data_lab_ROM)
   summary(model2.RR.pubbias)
   
- 
   # Do some model checks
   hist(residuals(model2.RR)) 
   plot(residuals(model2.RR))
   residuals(model2.RR)  
 
-  
-  
   ## Effect sizes for bimodal versus aerial breathers. Note here that you can fit the model with and without the intercept. Both results presented.
  
   data_lab_ROM %>% group_by(respiration_mode) %>% summarise(mean_t = mean(delta_t))
@@ -184,13 +181,18 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                       R = list(species_rotl = PhyloA), test = "t", 
                       data = data_lab_ROM)
+  model3.2.RR <- rma.mv(yi = yi, V = V, 
+                      mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode-1, 
+                      random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                      R = list(species_rotl = PhyloA), test = "t", 
+                      data = data_lab_ROM)
   summary(model3.RR)
+  summary(model3.2.RR)
   
   # Do some model checks
   hist(residuals(model3.RR)) 
   plot(residuals(model3.RR))
   residuals(model3.RR)
-  
   
   ## Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C). Controlling for the average temperature of the treatments
   
@@ -203,8 +205,6 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
   
   # Model check
   hist(residuals(model4.RR)) 
-  
-
   
   ###########################################
   #Variance models – CVR models
@@ -225,7 +225,13 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                        R = list(species_rotl = PhyloA), test = "t", 
                        data = data_lab_CVR)
+  model6.2.CVR <- rma.mv(yi = yi, V = V2, 
+                       mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode-1, 
+                       random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
+                       R = list(species_rotl = PhyloA), test = "t", 
+                       data = data_lab_CVR)
   summary(model6.CVR)
+  summary(model6.2.CVR)
   
   # Do some model checks
   hist(residuals(model6.CVR))
@@ -245,9 +251,6 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
                        data = data_lab_CVR)
   summary(model6.CVR.pubbias)
   
-  
- 
-  
   ##Effect of respiration mode on CVR
   model7.CVR <- rma.mv(yi = yi, V = V2, 
                        mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode-1, 
@@ -255,87 +258,105 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
                        R = list(species_rotl = PhyloA), test = "t", 
                        data = data_lab_CVR)
   
-  model7.CVR <- rma.mv(yi = yi, V = V2, 
+  model7.2.CVR <- rma.mv(yi = yi, V = V2, 
                        mods = ~ mean_t + delta_t + log(body_mass) + respiration_mode, 
                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                        R = list(species_rotl = PhyloA), test = "t", 
                        data = data_lab_CVR)
   summary(model7.CVR)
+  summary(model7.2.CVR)
   
   # Do some model checks
   hist(residuals(model7.CVR))
 
-  
   ##Effect sizes for different magnitudes of temperature increase (+3, +5-7, +8-9, +>10C)
   model8.CVR <- rma.mv(yi = yi, V = V2, 
                        mods = ~ mean_t + t_magnitude-1, 
                        random = list(~1|study_ID, ~1|species_rotl, ~1|obs), 
                        R = list(species_rotl = PhyloA), test = "t", 
-                       data = data_full_CVR)
+                       data = data_lab_CVR)
   summary(model8.CVR)
   
   # Do some model checks
   hist(residuals(model8.CVR))
   
-  
-  
-  
-  
   ###################################
   ## Figures
   ##################################
   
+  # Note that figures were modified in Adobe Illustrator to clean a few things up easier
+
   devtools::install_github("itchyshin/orchard_plot", subdir = "orchaRd", force = TRUE, build_vignettes = TRUE)
   library(orchaRd)
   library(patchwork)
   source("./code/revised_orchard.R")
-  find_rtools()
   
   
-  ## Figure 1 mean and variance
+  ################################
+  ## Figure 3
+  ################################
   
   # Temperature moderator
-  model1.RR_table_results <- mod_results(model1.RR, mod = "Int")
-  print(model1.RR_table_results)
-  model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
-  print(model4.RR_table_results)
-  
+  model1.RR_table_results <- mod_results(model1.RR, mod = "Int")  
   model5.CVR_table_results <- mod_results(model5.CVR, mod = "Int")
-  print(model5.CVR_table_results)
-  model8.CVR_table_results <- mod_results_new(model8.CVR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
-  print(model8.CVR_table_results)
+
+  # Need to fit models in contrast_field_dataset.R so run code in "./code/contrast_field_dataset.R"
+  field_model1.field.RR <- mod_results(model1.field.RR, mod = "Int")
+  field_model4.field.CVR <- mod_results(model4.field.CVR, mod = "Int")
   
-  spp <- data_verts_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
+  sppTotal <- length(unique(data_lab_ROM$species_rotl))
+  sppTotal_Field <- length(unique(data_field_ROM$species_rotl))
   
-  # Interesting issues here that none of us anticipated when making orchaRd and that is with respect to ordered factors. Things can get re-arranged in tables when order is not maintained. So, need to watch this. Fixed here, but colours are off. Just edit in Adobe
-  
-  sppTotal <- length(unique(data_verts_ROM$species_rotl))
   p1_RR_mod1 <- orchard_plot(model1.RR_table_results, mod = "Int", xlab = "log Response Ratio (lnRR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
-  p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
-    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
-  
+ 
   p1_CVR_mod5 <- orchard_plot(model5.CVR_table_results, mod = "Int", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
-  p1_CVR_mod8 <- orchard_plot(model8.CVR_table_results, mod = "t_magnitude", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
-    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
+
+  p1_RR_mod1_Field <- orchard_plot(field_model1.field.RR, mod = "Int", xlab = "log Response Ratio (lnRR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal_Field), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
+ 
+  p1_CVR_mod5_Field <- orchard_plot(field_model4.field.CVR, mod = "Int", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal_Field), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
+
   
   # Figure should be 75% there. Just do some modifications in Adobe.
-  pdf(width = 12, height = 11, file = "./preliminary_figures/Fig1.pdf", useDingbats = FALSE)
-  (p1_RR_mod1 / p1_RR_mod4) | (p1_CVR_mod5 / p1_CVR_mod8)
+  pdf(width = 12, height = 11, file = "./preliminary_figures/Fig3.pdf", useDingbats = FALSE)
+  #lab | field
+    (p1_RR_mod1 / p1_CVR_mod5) | (p1_RR_mod1_Field / p1_CVR_mod5_Field)
   dev.off()
-  
+
   ################################
-  ## Figure 2
+  ## Figure 4
+  ################################
+  model4.RR_table_results <- mod_results_new(model4.RR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
+  print(model4.RR_table_results)
+model8.CVR_table_results <- mod_results_new(model8.CVR, mod_cat = "t_magnitude", mod_cont=c("mean_t"), type = "zero")
+  print(model8.CVR_table_results)
+
+spp <- data_lab_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
+
+ p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
+
+ p1_CVR_mod8 <- orchard_plot(model8.CVR_table_results, mod = "t_magnitude", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+    annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
+
+ pdf(width = 12, height = 11, file = "./preliminary_figures/Fig4.pdf", useDingbats = FALSE)
+  (p1_RR_mod4 | p1_CVR_mod8)
+dev.off()
+
+  ################################
+  ## Figure 5
   ################################
   
-  model2.RR_table_results <- mod_results_new(model2.RR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
+  model2.RR_table_results <- mod_results_new(model3.2.RR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass)"), type = "mean")
   print(model2.RR_table_results)
   
-  model6.CVR_table_results <- mod_results_new(model6.CVR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass_g)"), type = "mean")
+  model6.CVR_table_results <- mod_results_new(model6.2.CVR, mod_cat = "respiration_mode", mod_cont=c("mean_t", "delta_t", "log(body_mass)"), type = "mean")
   print(model6.CVR_table_results)
   
-  spp <- data_verts_ROM %>% group_by(respiration_mode) %>% summarise(n = length(unique(species_rotl)))
+  spp <- data_lab_CVR %>% group_by(respiration_mode) %>% summarise(n = length(unique(species_rotl)))
   
   p1_RR_mod2 <- orchard_plot(model2.RR_table_results, mod = "respiration_mode", xlab = "log Response Ratio (lnRR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE) 
@@ -343,7 +364,7 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
   p1_CVR_mod6 <- orchard_plot(model6.CVR_table_results, mod = "respiration_mode", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE)
   
-  pdf(width = 9.480176,  height = 4.546255, "./preliminary_figures/Fig2.pdf", useDingbats = FALSE)
-  p1_RR_mod2 | p1_CVR_mod7
+  pdf(width = 9.480176,  height = 4.546255, "./preliminary_figures/Fig5.pdf", useDingbats = FALSE)
+  p1_RR_mod2 | p1_CVR_mod6
   dev.off()
     
