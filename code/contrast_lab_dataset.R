@@ -307,16 +307,16 @@ data_lab_CVR$obs <- 1:dim(data_lab_CVR)[1]
   sppTotal <- length(unique(data_lab_ROM$species_rotl))
   sppTotal_Field <- length(unique(data_field_ROM$species_rotl))
   
-  p1_RR_mod1 <- orchard_plot(model1.RR_table_results, mod = "Int", xlab = "log Response Ratio (lnRR)", angle=45) + 
+  p1_RR_mod1 <- orchard_plot(model1.RR_table_results, mod = "Int", xlab = "ln Response Ratio (lnRR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
  
-  p1_CVR_mod5 <- orchard_plot(model5.CVR_table_results, mod = "Int", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+  p1_CVR_mod5 <- orchard_plot(model5.CVR_table_results, mod = "Int", xlab = "ln Coefficient of Variation (lnCVR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
 
-  p1_RR_mod1_Field <- orchard_plot(field_model1.field.RR, mod = "Int", xlab = "log Response Ratio (lnRR)", angle=45) + 
+  p1_RR_mod1_Field <- orchard_plot(field_model1.field.RR, mod = "Int", xlab = "ln Response Ratio (lnRR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal_Field), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
  
-  p1_CVR_mod5_Field <- orchard_plot(field_model4.field.CVR, mod = "Int", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+  p1_CVR_mod5_Field <- orchard_plot(field_model4.field.CVR, mod = "Int", xlab = "ln Coefficient of Variation (lnCVR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ", sppTotal_Field), x= 0.8, y = 1.295, size = 3.5, parse= TRUE) 
 
   
@@ -336,10 +336,10 @@ model8.CVR_table_results <- mod_results_new(model8.CVR, mod_cat = "t_magnitude",
 
 spp <- data_lab_ROM %>% group_by(t_magnitude) %>% summarise(n = length(unique(species_rotl)))
 
- p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "log Response Ratio (lnRR)", angle=45) + 
+ p1_RR_mod4 <- orchard_plot(model4.RR_table_results, mod = "t_magnitude", xlab = "ln Response Ratio (lnRR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
 
- p1_CVR_mod8 <- orchard_plot(model8.CVR_table_results, mod = "t_magnitude", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+ p1_CVR_mod8 <- orchard_plot(model8.CVR_table_results, mod = "t_magnitude", xlab = "ln Coefficient of Variation (lnCVR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:4)+0.29, size = 3.5, parse= TRUE) 
 
  pdf(width = 12, height = 11, file = "./preliminary_figures/Fig4.pdf", useDingbats = FALSE)
@@ -358,10 +358,10 @@ dev.off()
   
   spp <- data_lab_CVR %>% group_by(respiration_mode) %>% summarise(n = length(unique(species_rotl)))
   
-  p1_RR_mod2 <- orchard_plot(model2.RR_table_results, mod = "respiration_mode", xlab = "log Response Ratio (lnRR)", angle=45) + 
+  p1_RR_mod2 <- orchard_plot(model2.RR_table_results, mod = "respiration_mode", xlab = "ln Response Ratio (lnRR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE) 
   
-  p1_CVR_mod6 <- orchard_plot(model6.CVR_table_results, mod = "respiration_mode", xlab = "log Coefficient of Variation (lnCVR)", angle=45) + 
+  p1_CVR_mod6 <- orchard_plot(model6.CVR_table_results, mod = "respiration_mode", xlab = "ln Coefficient of Variation (lnCVR)", angle=45) + 
     annotate(geom = "text", label = paste0("italic(Sp) == ",as.character(spp$n)), x= 1, y = c(1:2)+0.29, size = 3.5, parse= TRUE)
   
   pdf(width = 9.480176,  height = 4.546255, "./preliminary_figures/Fig5.pdf", useDingbats = FALSE)
